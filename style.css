@@ -1473,3 +1473,102 @@ cursor:pointer;
 .psppem-dosen-result-item:hover{
 background:#f5f7fa;
 }
+
+/* =========================================================
+   CETAK DOKUMEN
+   ========================================================= */
+
+
+.psppem-print-result{
+
+    margin-top:12px;
+
+    max-height:220px;
+
+    overflow-y:auto;
+
+    border-radius:12px;
+
+}
+
+
+
+.psppem-print-result-item{
+
+    padding:12px 14px;
+
+    border:1px solid #eee;
+
+    border-radius:10px;
+
+    margin-bottom:8px;
+
+    cursor:pointer;
+
+    background:#fff;
+
+    transition:.2s ease;
+
+}
+
+
+
+.psppem-print-result-item:hover{
+
+    background:#fff5f2;
+
+    border-color:#ef6b4a;
+
+}
+
+
+
+.psppem-print-result-item strong{
+
+    display:block;
+
+    font-size:14px;
+
+}
+
+
+
+.psppem-print-result-item small{
+
+    color:#777;
+
+}
+
+
+
+#psppemPrintStudentInfo{
+
+    margin-top:18px;
+
+    padding:16px;
+
+    border-radius:12px;
+
+    background:#fafafa;
+
+    border:1px solid #eee;
+
+}
+
+
+
+#psppemPrintStudentInfo h3{
+
+    margin-top:0;
+
+    margin-bottom:12px;
+
+}
+
+
+
+#psppemPrintStudentInfo p{
+
+    margin:6px 0;
+
+}
