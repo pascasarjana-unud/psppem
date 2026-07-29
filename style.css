@@ -1085,4 +1085,52 @@ body.psppem-modal-open {
     width: 100%;
   }
 
+  .psppem-exam-box{
+
+margin:20px 24px;
+padding:20px;
+border-radius:22px;
+
+border:1px solid rgba(230,99,70,.14);
+
+background:
+linear-gradient(
+180deg,
+#ffffff,
+#fff8f6
+);
+
+}
+
+
+.psppem-exam-box.empty{
+
+opacity:.75;
+
+}
+
+
+.psppem-exam-box hr{
+
+border:0;
+border-top:1px solid rgba(51,51,51,.12);
+
+margin:14px 0;
+
+}
+
+
+.psppem-exam-detail{
+
+font-size:13px;
+line-height:1.7;
+
+}
+
+
+.psppem-exam-detail p{
+
+margin:4px 0;
+
+} 
 }
