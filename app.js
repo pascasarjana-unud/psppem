@@ -637,13 +637,6 @@ ${esc(student.nip2)}
 ${renderExamInfo(student)}
 
 
-<div class="psppem-card-action">
-
-${addExamButton(student)}
-
-</div>
-
-
 </div>
 
 `).join("")
