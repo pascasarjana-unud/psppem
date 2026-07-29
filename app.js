@@ -633,7 +633,7 @@ ${esc(student.nip2)}
 
 </div>
 
-
+${renderExamInfo(student)}
 
 </div>
 
@@ -1505,6 +1505,150 @@ return originalOpenAdd();
 };
 
 /* =========================================================
+   FORMAT TANGGAL UJIAN
+   ========================================================= */
+
+function formatTanggalUjian(value){
+
+    if(!value){
+        return "-";
+    }
+
+
+    const date =
+    new Date(value);
+
+
+
+    if(isNaN(date)){
+        return value;
+    }
+
+
+    return date.toLocaleDateString(
+        "id-ID",
+        {
+            day:"2-digit",
+            month:"long",
+            year:"numeric"
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   STATUS UJIAN CARD
+   ========================================================= */
+
+function renderExamInfo(student){
+
+
+    if(!student.pembimbing3){
+
+        return `
+
+        <div class="psppem-exam-box empty">
+
+            <strong>
+            Jadwal Ujian
+            </strong>
+
+
+            <p>
+            Belum ada jadwal ujian.
+            </p>
+
+        </div>
+
+        `;
+
+    }
+
+
+
+    return `
+
+    <div class="psppem-exam-box">
+
+
+        <span class="psppem-advisor-label">
+        Penguji
+        </span>
+
+
+        <div class="psppem-advisor-name">
+
+        ${esc(student.pembimbing3)}
+
+        </div>
+
+
+        <div class="psppem-advisor-nip">
+
+        ${esc(student.nip3)}
+
+        </div>
+
+
+        <hr>
+
+
+        <div class="psppem-exam-detail">
+
+            <strong>
+            Jadwal Ujian
+            </strong>
+
+
+            <p>
+            ${esc(student.hari)},
+            ${formatTanggalUjian(student.tanggal)}
+            </p>
+
+
+            <p>
+            Jam:
+            ${esc(student.jam)}
+            </p>
+
+
+            <p>
+            Ruangan:
+            ${esc(student.ruangan)}
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+    `;
+
+
+}
+
+
+
+/* =========================================================
+   LABEL BUTTON UJIAN
+   ========================================================= */
+
+function examButtonLabel(student){
+
+
+    return student.pembimbing3
+
+    ? "Edit Ujian"
+
+    : "Jadwal Ujian";
+
+
+}
+   
+/* =========================================================
    FITUR UJIAN
    ========================================================= */
 
@@ -1514,19 +1658,30 @@ function addExamButton(student){
 
 return `
 
+
 <button
 type="button"
 class="psppem-button psppem-button-primary"
 onclick="psppemOpenUjianModal('${student.sourceRow}')">
 
-<svg viewBox="0 0 24 24" aria-hidden="true">
+
+<span class="psppem-button-icon">
+
+<svg viewBox="0 0 24 24">
+
 <path fill="currentColor"
 d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm-7 14h-2v-2h2v2Zm2-5h-4V7h4v5Z"/>
+
 </svg>
 
-Ujian
+</span>
+
+
+${examButtonLabel(student)}
+
 
 </button>
+
 
 `;
 
@@ -1591,6 +1746,8 @@ ${student.nama}
 
 
 resetUjianForm();
+
+fillExistingExam(student);
 
 
 
@@ -1803,7 +1960,60 @@ option
 
 }
 
+function fillExistingExam(student){
 
+    if(!student)
+    return;
+
+
+    $("psppemUjianHari").value =
+    student.hari || "";
+
+
+    $("psppemUjianTanggal").value =
+    student.tanggal || "";
+
+
+    $("psppemUjianJam").value =
+    student.jam || "";
+
+
+    $("psppemUjianRuangan").value =
+    student.ruangan || "";
+
+
+    if(student.pembimbing3){
+
+        const select =
+        $("psppemUjianPenguji");
+
+
+        const option =
+        [
+            ...select.options
+        ]
+        .find(
+            item =>
+            item.textContent.trim()
+            ===
+            student.pembimbing3
+        );
+
+
+        if(option){
+
+            select.value =
+            option.value;
+
+
+            $("psppemUjianNip").value =
+            student.nip3 || "";
+
+        }
+
+    }
+
+}
 
 /* =========================================================
    PILIH PENGUJI
