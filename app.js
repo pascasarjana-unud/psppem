@@ -2445,13 +2445,77 @@ loading
 
 }
 
-
-
 /* =========================================================
-   PATCH RENDER CARD TAMBAH TOMBOL UJIAN
+   RESET TAMPILAN
    ========================================================= */
 
+window.psppemResetDisplay =
+function(){
 
- 
 
+    const search =
+    $("psppemSearch");
+
+
+    const angkatan =
+    $("psppemAngkatan");
+
+
+    if(search){
+
+        search.value = "";
+
+    }
+
+
+    if(angkatan){
+
+        angkatan.value = "";
+
+    }
+
+
+
+    const resultArea =
+    $("psppemResultArea");
+
+
+    if(resultArea){
+
+        resultArea.style.display =
+        "none";
+
+    }
+
+
+
+    const container =
+    $("psppemData");
+
+
+    if(container){
+
+        container.innerHTML = "";
+
+    }
+
+
+
+    if($("psppemTotal")){
+
+        $("psppemTotal")
+        .textContent = "0";
+
+    }
+
+
+
+    setStatus(
+        "",
+        "info"
+    );
+
+
+};
+   
 })();
