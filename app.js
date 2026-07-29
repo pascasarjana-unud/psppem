@@ -2203,15 +2203,17 @@ return;
 
 
 
-const select =
-$("psppemUjianPenguji");
+const pengujiRow =
+$("psppemUjianPenguji").value;
 
 
-
-const option =
-select.options[
-select.selectedIndex
-];
+const pengujiDosen =
+STATE.dosen.find(
+d =>
+String(d.sourceRow)
+===
+String(pengujiRow)
+);
 
 
 
@@ -2274,7 +2276,7 @@ $("psppemUjianPassword").value
 
 
 if(
-select.value ===
+$("psppemUjianPenguji").value ===
 "LAINNYA"
 ){
 
