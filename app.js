@@ -2906,6 +2906,20 @@ setStatus(
 
 };
 
+/* =========================================================
+   CETAK DOKUMEN
+   ========================================================= */
 
+
+window.psppemOpenPrintModal =
+function(){
+
+
+alert(
+"Modul Cetak Dokumen sedang disiapkan."
+);
+
+
+};
 
 })();
