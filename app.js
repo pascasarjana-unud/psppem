@@ -633,6 +633,32 @@ ${esc(student.nip2)}
 
 </div>
 
+<div class="psppem-advisor-action">
+
+<button
+type="button"
+class="psppem-button psppem-button-secondary"
+onclick="psppemOpenPembimbingModal('${student.sourceRow}')">
+
+
+<span class="psppem-button-icon">
+
+<svg viewBox="0 0 24 24">
+
+<path fill="currentColor"
+d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04c.39-.39.39-1.03 0-1.42l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.82Z"/>
+
+</svg>
+
+</span>
+
+
+Edit Pembimbing
+
+
+</button>
+
+</div>
 
 ${renderExamInfo(student)}
 
@@ -2514,6 +2540,67 @@ loading
 
 }
 
+/* BUAT FUNGSI ISI DATA LAMA */
+function fillPembimbingForm(student){
+
+
+$("psppemEditPembimbing1").value =
+student.pembimbing1 || "";
+
+
+$("psppemEditNip1").value =
+student.nip1 || "";
+
+
+
+$("psppemEditPembimbing2").value =
+student.pembimbing2 || "";
+
+
+$("psppemEditNip2").value =
+student.nip2 || "";
+
+
+}
+
+/* AUTO NIP */
+window.psppemEditDosenChanged =
+function(no){
+
+
+const select =
+$("psppemEditPembimbing"+no);
+
+
+const nip =
+$("psppemEditNip"+no);
+
+
+
+const option =
+select.options[
+select.selectedIndex
+];
+
+
+
+if(option){
+
+nip.value =
+option.dataset.nip || "";
+
+}
+else{
+
+nip.value =
+"";
+
+}
+
+
+};
+
+   
 /* =========================================================
    RESET TAMPILAN
    ========================================================= */
@@ -2583,6 +2670,69 @@ function(){
         "",
         "info"
     );
+
+
+};
+
+/* =========================================================
+   EDIT PEMBIMBING
+   ========================================================= */
+
+
+let CURRENT_PEMBIMBING_ROW = null;
+
+
+
+window.psppemOpenPembimbingModal =
+async function(row){
+
+
+CURRENT_PEMBIMBING_ROW =
+row;
+
+
+
+const student =
+STATE.data.find(
+item =>
+String(item.sourceRow)
+===
+String(row)
+);
+
+
+
+if(!student)
+return;
+
+
+
+$("psppemPembimbingNama")
+.textContent =
+student.nama;
+
+
+
+$("psppemPembimbingNim")
+.textContent =
+student.nim;
+
+
+
+await loadDosen();
+
+
+
+fillPembimbingForm(
+student
+);
+
+
+
+$("psppemPembimbingModal")
+.classList.add(
+"is-open"
+);
 
 
 };
