@@ -1,68 +1,125 @@
 (function () {
 "use strict";
 
-   /* =========================================================
+/* =========================================================
    CONFIG
    ========================================================= */
 
-const URL = "https://script.google.com/macros/s/AKfycbwj-BbjdPy0HX_XIFajLCsvK2vYNJzu9Cu2AwOK5DjTfHYT0nwKYCNMlu9j7nEMJ8IQow/exec";
+const URL =
+"https://script.google.com/macros/s/AKfycbwj-BbjdPy0HX_XIFajLCsvK2vYNJzu9Cu2AwOK5DjTfHYT0nwKYCNMlu9j7nEMJ8IQow/exec";
+
 
 const STATE = {
-  data: [],
-  dosen: [],
-  loaded: false,
-  currentStudent: null
+    data: [],
+    dosen: [],
+    loaded: false,
+    currentStudent: null
 };
 
-const $ = id => document.getElementById(id);
 
-   /* =========================================================
+const $ = id =>
+document.getElementById(id);
+
+
+/* =========================================================
    HELPER
    ========================================================= */
 
 function esc(value){
-  return String(value ?? "")
-  .replace(/[&<>"']/g, function(char){
-    return {
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    }[char];
-  });
+
+    return String(value ?? "")
+    .replace(
+        /[&<>"']/g,
+        function(char){
+
+            return {
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;",
+                "'":"&#39;"
+            }[char];
+
+        }
+    );
+
 }
+
+
 
 function text(value){
-  return String(value ?? "")
-  .trim();
+
+    return String(value ?? "")
+    .trim();
+
 }
 
-function setStatus(message,type="info"){
-  const el =
-  $("psppemStatus");
-  if(!el) return;
-  el.style.display = message ? "block" : "none";
-  el.className = "psppem-status";
-  if(type==="success"){
-    el.classList.add("is-success");
-  }
-  else if(type==="error"){
-    el.classList.add("is-error");
-  }
-  else{
-    el.classList.add("is-info");
-  }
-  el.textContent = message || "";
+
+
+function setStatus(
+message,
+type="info"
+){
+
+    const el =
+    $("psppemStatus");
+
+
+    if(!el)
+    return;
+
+
+    el.style.display =
+    message
+    ?
+    "block"
+    :
+    "none";
+
+
+    el.className =
+    "psppem-status";
+
+
+    if(type==="success"){
+
+        el.classList.add(
+            "is-success"
+        );
+
+    }
+    else if(type==="error"){
+
+        el.classList.add(
+            "is-error"
+        );
+
+    }
+    else{
+
+        el.classList.add(
+            "is-info"
+        );
+
+    }
+
+
+    el.textContent =
+    message || "";
+
 }
 
-   /* =========================================================
+
+
+/* =========================================================
    JSONP GET
    ========================================================= */
 
 function jsonp(params){
+
 return new Promise(
 (resolve,reject)=>{
+
 
 const callback =
 "psppem_" +
@@ -77,6 +134,7 @@ const script =
 document.createElement(
 "script"
 );
+
 
 
 const timeout =
@@ -99,11 +157,11 @@ new Error(
 
 function cleanup(){
 
-clearTimeout(timeout);
+    clearTimeout(timeout);
 
-delete window[callback];
+    delete window[callback];
 
-script.remove();
+    script.remove();
 
 }
 
@@ -112,9 +170,9 @@ script.remove();
 window[callback] =
 response=>{
 
-cleanup();
+    cleanup();
 
-resolve(response);
+    resolve(response);
 
 };
 
@@ -136,13 +194,13 @@ new URLSearchParams(params)
 script.onerror =
 ()=>{
 
-cleanup();
+    cleanup();
 
-reject(
-new Error(
-"Gagal menghubungi server."
-)
-);
+    reject(
+        new Error(
+            "Gagal menghubungi server."
+        )
+    );
 
 };
 
@@ -171,8 +229,10 @@ setStatus(
 );
 
 
+
 const response =
 await jsonp({});
+
 
 
 if(
@@ -193,12 +253,14 @@ STATE.data =
 response.data || [];
 
 
+
 STATE.loaded =
 true;
 
 
 
 loadAngkatan();
+
 
 
 setStatus(
@@ -251,9 +313,13 @@ response.message ||
 
 
 
-STATE.dosen = response.data || [];
+STATE.dosen =
+response.data || [];
+
+
 
 return STATE.dosen;
+
 
 }
 
@@ -270,7 +336,9 @@ const select =
 $("psppemAngkatan");
 
 
-if(!select) return;
+
+if(!select)
+return;
 
 
 
@@ -296,8 +364,8 @@ select.innerHTML =
 <option value="">
 Semua Angkatan
 </option>
-
 `;
+
 
 
 values.forEach(value=>{
@@ -309,8 +377,8 @@ select.innerHTML +=
 <option value="${esc(value)}">
 ${esc(value)}
 </option>
-
 `;
+
 
 
 });
@@ -348,12 +416,14 @@ student=>{
 
 const matchAngkatan =
 !angkatan ||
-student.angkatan === angkatan;
+text(student.angkatan)
+.toUpperCase()
+===
+angkatan;
 
 
 
 const source =
-
 [
 student.nama,
 student.nim,
@@ -386,12 +456,13 @@ matchKeyword
 
 });
 
+
 }
 
 
 
 /* =========================================================
-   RENDER CARD
+   RENDER DATA
    ========================================================= */
 
 function renderData(){
@@ -405,7 +476,9 @@ const resultArea =
 $("psppemResultArea");
 
 
-if(!container) return;
+
+if(!container)
+return;
 
 
 
@@ -433,9 +506,8 @@ data.length;
 
 
 
-if(
-!data.length
-){
+if(!data.length){
+
 
 container.innerHTML =
 
@@ -466,7 +538,6 @@ container.innerHTML =
 <div class="psppem-student-list">
 
 ${
-
 data.map(student=>`
 
 <div class="psppem-student-card">
@@ -478,9 +549,7 @@ data.map(student=>`
 <div>
 
 <h3 class="psppem-student-name">
-
 ${esc(student.nama)}
-
 </h3>
 
 
@@ -507,6 +576,7 @@ ${esc(student.angkatan)}
 </div>
 
 
+
 <div class="psppem-student-badge-group">
 
 
@@ -522,15 +592,15 @@ ${esc(student.angkatan || "-")}
 type="button"
 class="psppem-button psppem-button-edit-small"
 onclick="psppemOpenPembimbingModal('${student.sourceRow}')">
-<span class="psppem-button-icon">
-<svg viewBox="0 0 24 24">
-<path fill="currentColor"
-d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04c.39-.39.39-1.03 0-1.42l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.82Z"/>
-</svg>
-</span>
+
 Edit
+
 </button>
+
+
 </div>
+
+
 </div>
 
 
@@ -540,9 +610,7 @@ Edit
 <div class="psppem-advisor">
 
 <span class="psppem-advisor-label">
-
 Pembimbing I
-
 </span>
 
 
@@ -567,9 +635,7 @@ ${esc(student.nip1)}
 <div class="psppem-advisor">
 
 <span class="psppem-advisor-label">
-
 Pembimbing II
-
 </span>
 
 
@@ -592,13 +658,13 @@ ${esc(student.nip2)}
 
 </div>
 
+
 ${renderExamInfo(student)}
 
 
 </div>
 
 `).join("")
-
 }
 
 </div>
@@ -618,11 +684,17 @@ async function(){
 
 
 try{
+
+
 await loadData();
-   }
+
+
 renderData();
+
+
 }
 catch(error){
+
 
 setStatus(
 error.message,
@@ -632,6 +704,7 @@ error.message,
 
 }
 
+
 };
 
 
@@ -639,9 +712,8 @@ error.message,
 window.psppemSearchChanged =
 function(){
 
-if(
-STATE.loaded
-){
+
+if(STATE.loaded){
 
 renderData();
 
@@ -661,8 +733,10 @@ renderData();
 }
 );
 
+
+
 /* =========================================================
-   POST DATA KE APPS SCRIPT
+   POST DATA
    ========================================================= */
 
 function postData(data){
@@ -684,6 +758,7 @@ const iframe =
 document.createElement(
 "iframe"
 );
+
 
 
 const form =
@@ -751,18 +826,14 @@ resolve(result);
 
 function listener(event){
 
-
 const data =
 event.data;
 
 
-
 if(
 data &&
-data.channel ===
-"psppem" &&
-data.requestId ===
-requestId
+data.channel === "psppem" &&
+data.requestId === requestId
 ){
 
 done(data);
@@ -852,15 +923,11 @@ form
 form.submit();
 
 
-
 });
 
 }
-
-
-
 /* =========================================================
-   OPEN ADD MAHASISWA MODAL
+   TAMBAH MAHASISWA
    ========================================================= */
 
 window.psppemOpenAddModal =
@@ -876,6 +943,7 @@ await loadDosen();
 
 const modal =
 $("psppemAddModal");
+
 
 if(!modal)
 return;
@@ -901,6 +969,7 @@ document.documentElement
 );
 
 
+
 document.body
 .classList.add(
 "psppem-modal-open"
@@ -911,14 +980,15 @@ document.body
 resetAddForm();
 
 
-
 }
 catch(error){
+
 
 setStatus(
 error.message,
 "error"
 );
+
 
 }
 
@@ -959,6 +1029,7 @@ document.documentElement
 );
 
 
+
 document.body
 .classList.remove(
 "psppem-modal-open"
@@ -989,9 +1060,12 @@ const el =
 $(id);
 
 
-if(el)
-el.value="";
 
+if(el){
+
+el.value = "";
+
+}
 
 });
 
@@ -1009,161 +1083,17 @@ const el =
 $(id);
 
 
-if(el)
-el.value="";
 
+if(el){
+
+el.value = "";
+
+}
 
 });
 
 
 }
-
-
-
-/* =========================================================
-   LOAD DOSEN KE FORM TAMBAH
-   ========================================================= */
-
-function fillDosenSelect(
-id
-){
-
-
-const select =
-$(id);
-
-
-if(!select)
-return;
-
-
-
-select.innerHTML =
-
-`
-<option value="">
-Pilih dosen pembimbing
-</option>
-`;
-
-
-
-STATE.dosen
-.forEach(dosen=>{
-
-
-const option =
-document.createElement(
-"option"
-);
-
-
-option.value =
-dosen.sourceRow;
-
-
-option.textContent =
-dosen.nama;
-
-
-option.dataset.nip =
-dosen.nip;
-
-
-option.dataset.nama =
-dosen.nama;
-
-
-
-select.appendChild(
-option
-);
-
-
-
-});
-
-
-}
-
-
-
-async function prepareAddForm(){
-
-
-await loadDosen();
-
-
-
-fillDosenSelect(
-"psppemAddPembimbing1"
-);
-
-
-fillDosenSelect(
-"psppemAddPembimbing2"
-);
-
-
-}
-
-
-
-function updateNip(
-number
-){
-
-
-const select =
-$(
-"psppemAddPembimbing" +
-number
-);
-
-
-
-const nip =
-$(
-"psppemAddNip" +
-number
-);
-
-
-
-if(
-!select ||
-!nip
-)
-return;
-
-
-
-const option =
-select.options[
-select.selectedIndex
-];
-
-
-
-nip.value =
-option?.dataset?.nip ||
-"";
-
-
-}
-
-
-
-/* =========================================================
-   PEMBIMBING CHANGE
-   ========================================================= */
-
-window.psppemDosenChanged =
-function(number){
-
-updateNip(number);
-
-};
 
 
 
@@ -1176,6 +1106,8 @@ async function(event){
 
 
 event.preventDefault();
+
+
 
 const p1 =
 $("psppemAddPembimbing1");
@@ -1271,10 +1203,13 @@ if(
 !payload.password
 ){
 
+
 showAddMessage(
 "Nama, NIM, angkatan, dan password wajib diisi.",
 true
 );
+
+
 
 return;
 
@@ -1359,8 +1294,8 @@ finally{
 toggleAddButton(false);
 
 
-
 }
+
 
 
 };
@@ -1415,6 +1350,7 @@ const button =
 $("psppemAddSubmit");
 
 
+
 if(!button)
 return;
 
@@ -1434,30 +1370,194 @@ loading
 
 
 }
-
-
-
 /* =========================================================
-   PREPARE FORM WHEN OPEN
+   AUTOCOMPLETE DOSEN ENGINE
    ========================================================= */
 
 
-const originalOpenAdd =
-window.psppemOpenAddModal;
+function psppemSearchDosen(keyword){
 
 
-window.psppemOpenAddModal =
-async function(){
+keyword =
+String(keyword || "")
+.toLowerCase()
+.trim();
 
 
-await prepareAddForm();
+
+if(!keyword){
+
+return [];
+
+}
 
 
-return originalOpenAdd();
+
+return STATE.dosen
+
+.filter(
+function(dosen){
+
+
+const target =
+[
+dosen.nama,
+dosen.nip
+
+]
+.join(" ")
+.toLowerCase();
+
+
+
+return target.includes(
+keyword
+);
+
+
+
+}
+
+)
+
+.slice(
+0,
+10
+);
+
+
+
+}
+
+
+
+window.psppemRenderDosenSearch =
+function(
+resultId,
+inputId,
+hiddenId,
+nipId,
+keyword
+){
+
+
+
+const container =
+$(resultId);
+
+
+
+if(!container)
+return;
+
+
+
+const result =
+psppemSearchDosen(
+keyword
+);
+
+
+
+if(!result.length){
+
+
+container.innerHTML =
+"";
+
+
+return;
+
+
+}
+
+
+
+container.innerHTML =
+
+result.map(
+function(dosen){
+
+
+return `
+
+<div
+class="psppem-dosen-result-item"
+onclick="psppemSelectDosen(
+'${resultId}',
+'${inputId}',
+'${hiddenId}',
+'${nipId}',
+'${dosen.sourceRow}',
+'${esc(dosen.nama)}',
+'${esc(dosen.nip)}'
+)">
+
+
+<strong>
+
+${esc(dosen.nama)}
+
+</strong>
+
+
+<small>
+
+${esc(dosen.nip)}
+
+</small>
+
+
+</div>
+
+`;
+
+
+}
+
+)
+
+.join("");
+
 
 
 };
 
+
+
+window.psppemSelectDosen =
+function(
+resultId,
+inputId,
+hiddenId,
+nipId,
+sourceRow,
+nama,
+nip
+){
+
+
+
+$(inputId).value =
+nama;
+
+
+
+$(hiddenId).value =
+sourceRow;
+
+
+
+$(nipId).value =
+nip;
+
+
+
+$(resultId).innerHTML =
+"";
+
+
+};
 /* =========================================================
    FORMAT TANGGAL UJIAN
    ========================================================= */
@@ -1475,8 +1575,11 @@ function formatTanggalUjian(value){
 
 
     if(isNaN(date)){
+
         return value;
+
     }
+
 
 
     return date.toLocaleDateString(
@@ -1583,6 +1686,7 @@ ${esc(student.hari)},
 ${formatTanggalUjian(student.tanggal)}
 </p>
 
+
 </div>
 
 
@@ -1598,6 +1702,7 @@ Jam
 ${esc(student.jam)}
 </p>
 
+
 </div>
 
 
@@ -1612,6 +1717,7 @@ Ruangan
 <p>
 ${esc(student.ruangan)}
 </p>
+
 
 </div>
 
@@ -1633,25 +1739,8 @@ ${addExamButton(student)}
 
 
 /* =========================================================
-   LABEL BUTTON UJIAN
+   BUTTON UJIAN
    ========================================================= */
-
-function examButtonLabel(student){
-
-
-    return student.pembimbing3
-
-    ? "Edit Ujian"
-
-    : "Jadwal Ujian";
-
-
-}
-   
-/* =========================================================
-   FITUR UJIAN
-   ========================================================= */
-
 
 function addExamButton(student){
 
@@ -1665,21 +1754,11 @@ type="button"
 class="psppem-button psppem-button-primary"
 onclick="psppemOpenUjianModal('${student.sourceRow}')">
 
-
-<span class="psppem-button-icon">
-
-<svg viewBox="0 0 24 24">
-
-<path fill="currentColor"
-d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm-7 14h-2v-2h2v2Zm2-5h-4V7h4v5Z"/>
-
-</svg>
-
-</span>
-
-
-${student.pembimbing3 ? "Edit Ujian" : "Jadwal Ujian"}
-
+${student.pembimbing3
+?
+"Edit Ujian"
+:
+"Jadwal Ujian"}
 
 </button>
 
@@ -1695,7 +1774,6 @@ ${student.pembimbing3 ? "Edit Ujian" : "Jadwal Ujian"}
    OPEN MODAL UJIAN
    ========================================================= */
 
-
 window.psppemOpenUjianModal =
 async function(sourceRow){
 
@@ -1706,7 +1784,8 @@ try{
 const student =
 STATE.data.find(
 item =>
-String(item.sourceRow) ===
+String(item.sourceRow)
+===
 String(sourceRow)
 );
 
@@ -1750,9 +1829,9 @@ ${student.nama}
 resetUjianForm();
 
 
+
 await loadDosen();
 
-fillUjianDosen();
 
 
 fillExistingExam(student);
@@ -1778,6 +1857,7 @@ document.documentElement
 );
 
 
+
 document.body
 .classList.add(
 "psppem-modal-open"
@@ -1788,17 +1868,20 @@ document.body
 }
 catch(error){
 
+
 setStatus(
 error.message,
 "error"
 );
 
+
 }
 
 
 };
-
-
+/* =========================================================
+   CLOSE MODAL UJIAN
+   ========================================================= */
 
 window.psppemCloseUjianModal =
 function(){
@@ -1806,6 +1889,7 @@ function(){
 
 const modal =
 $("psppemUjianModal");
+
 
 
 if(!modal)
@@ -1832,6 +1916,7 @@ document.documentElement
 );
 
 
+
 document.body
 .classList.remove(
 "psppem-modal-open"
@@ -1843,6 +1928,10 @@ document.body
 
 
 
+/* =========================================================
+   RESET FORM UJIAN
+   ========================================================= */
+
 function resetUjianForm(){
 
 
@@ -1851,6 +1940,8 @@ function resetUjianForm(){
 "psppemUjianTanggal",
 "psppemUjianJam",
 "psppemUjianRuangan",
+"psppemUjianPenguji",
+"psppemUjianPengujiSearch",
 "psppemUjianNip",
 "psppemUjianNamaLainnya",
 "psppemUjianNipLainnya",
@@ -1864,11 +1955,27 @@ const el =
 $(id);
 
 
-if(el)
-el.value="";
 
+if(el){
+
+el.value = "";
+
+}
 
 });
+
+
+
+const result =
+$("psppemUjianPengujiResult");
+
+
+if(result){
+
+result.innerHTML =
+"";
+
+}
 
 
 
@@ -1884,137 +1991,64 @@ other.style.display =
 }
 
 
-
 }
 
 
 
 /* =========================================================
-   LOAD DOSEN UJIAN
+   ISI DATA UJIAN LAMA
    ========================================================= */
 
-
-function fillUjianDosen(){
-
-
-const select =
-$("psppemUjianPenguji");
+function fillExistingExam(student){
 
 
-
-if(!select)
+if(!student)
 return;
 
 
 
-select.innerHTML =
-
-`
-<option value="">
-Pilih Penguji
-</option>
-
-<option value="LAINNYA">
-Penguji Eksternal
-</option>
-
-`;
+$("psppemUjianTanggal").value =
+student.tanggal || "";
 
 
 
-STATE.dosen
-.forEach(dosen=>{
-
-
-const option =
-document.createElement(
-"option"
-);
-
-
-option.value =
-dosen.sourceRow;
-
-
-option.textContent =
-dosen.nama;
-
-
-option.dataset.nama =
-dosen.nama;
-
-
-option.dataset.nip =
-dosen.nip;
+$("psppemUjianJam").value =
+student.jam || "";
 
 
 
-select.appendChild(
-option
-);
+$("psppemUjianRuangan").value =
+student.ruangan || "";
 
 
-});
+
+if(student.tanggal){
 
 
+const date =
+new Date(student.tanggal);
+
+
+
+const hari =
+[
+"Minggu",
+"Senin",
+"Selasa",
+"Rabu",
+"Kamis",
+"Jumat",
+"Sabtu"
+];
+
+
+
+$("psppemUjianHari").value =
+hari[date.getDay()];
 
 }
 
-function fillExistingExam(student){
 
-    if(!student)
-    return;
-
-
-
-    $("psppemUjianTanggal").value =
-    student.tanggal || "";
-
-
-
-    $("psppemUjianJam").value =
-    student.jam || "";
-
-
-
-    $("psppemUjianRuangan").value =
-    student.ruangan || "";
-
-
-
-    // Hitung ulang hari berdasarkan tanggal
-
-    if(student.tanggal){
-
-        const date =
-        new Date(student.tanggal);
-
-
-
-        const hari = [
-
-            "Minggu",
-            "Senin",
-            "Selasa",
-            "Rabu",
-            "Kamis",
-            "Jumat",
-            "Sabtu"
-
-        ];
-
-
-
-        $("psppemUjianHari").value =
-        hari[date.getDay()];
-
-    }
-    else{
-
-        $("psppemUjianHari").value =
-        "";
-
-    }
 
 if(student.pembimbing3){
 
@@ -2037,9 +2071,11 @@ $("psppemUjianPengujiSearch")
 penguji.nama;
 
 
+
 $("psppemUjianPenguji")
 .value =
 penguji.sourceRow;
+
 
 
 $("psppemUjianNip")
@@ -2052,73 +2088,8 @@ penguji.nip;
 
 }
 
-}
-
-/* =========================================================
-   PILIH PENGUJI
-   ========================================================= */
-
-
-window.psppemUjianPengujiChanged =
-function(){
-
-
-const pengujiRow =
-$("psppemUjianPenguji").value;
-
-
-const pengujiDosen =
-STATE.dosen.find(
-d =>
-String(d.sourceRow)
-===
-String(pengujiRow)
-);
-
-
-
-const nip =
-$("psppemUjianNip");
-
-
-
-const other =
-$("psppemUjianOtherFields");
-
-
-if(
-select.value ===
-"LAINNYA"
-){
-
-
-other.style.display =
-"grid";
-
-
-nip.value =
-"";
-
 
 }
-
-else{
-
-
-other.style.display =
-"none";
-
-
-nip.value =
-option?.dataset?.nip ||
-"";
-
-
-}
-
-
-};
-
 
 
 
@@ -2126,51 +2097,50 @@ option?.dataset?.nip ||
    HARI OTOMATIS
    ========================================================= */
 
-
 $("psppemUjianTanggal")
 ?.addEventListener(
 "change",
 function(){
 
 
-    if(!this.value)
-    return;
+if(!this.value)
+return;
 
 
 
-    const date =
-    new Date(this.value);
+const date =
+new Date(this.value);
 
 
 
-    const hari = [
-
-        "Minggu",
-        "Senin",
-        "Selasa",
-        "Rabu",
-        "Kamis",
-        "Jumat",
-        "Sabtu"
-
-    ];
-
+const hari =
+[
+"Minggu",
+"Senin",
+"Selasa",
+"Rabu",
+"Kamis",
+"Jumat",
+"Sabtu"
+];
 
 
-    $("psppemUjianHari").value =
-    hari[date.getDay()];
+
+$("psppemUjianHari")
+.value =
+hari[date.getDay()];
+
 
 
 }
-);
 
+);
 
 
 
 /* =========================================================
    SUBMIT UJIAN
    ========================================================= */
-
 
 window.psppemSubmitUjian =
 async function(event){
@@ -2185,16 +2155,15 @@ STATE.currentStudent;
 
 
 
-if(!student){
-
+if(!student)
 return;
-
-}
 
 
 
 const pengujiRow =
-$("psppemUjianPenguji").value;
+$("psppemUjianPenguji")
+.value;
+
 
 
 const pengujiDosen =
@@ -2207,7 +2176,7 @@ String(pengujiRow)
 
 
 
-let payload = {
+const payload = {
 
 
 action:
@@ -2245,6 +2214,7 @@ $("psppemUjianRuangan").value,
 pengujiType:
 "",
 
+
 pengujiRow:
 "",
 
@@ -2266,7 +2236,7 @@ $("psppemUjianPassword").value
 
 
 if(
-$("psppemUjianPenguji").value ===
+pengujiRow ===
 "LAINNYA"
 ){
 
@@ -2290,7 +2260,6 @@ $("psppemUjianNipLainnya").value
 
 
 }
-
 else{
 
 
@@ -2383,7 +2352,6 @@ true
 );
 
 
-
 }
 finally{
 
@@ -2394,11 +2362,10 @@ toggleUjianButton(false);
 }
 
 
-
 };
-
-
-
+/* =========================================================
+   MESSAGE UJIAN
+   ========================================================= */
 
 function showUjianMessage(
 message,
@@ -2441,7 +2408,6 @@ message;
 
 
 
-
 function toggleUjianButton(
 loading
 ){
@@ -2472,183 +2438,15 @@ loading
 
 }
 
-/* BUAT FUNGSI ISI DATA LAMA */
-function fillPembimbingForm(student){
 
-
-const d1 =
-STATE.dosen.find(
-d =>
-String(d.nama || "").trim()
-===
-String(student.pembimbing1 || "").trim()
-);
-
-
-
-const d2 =
-STATE.dosen.find(
-d =>
-String(d.nama || "").trim()
-===
-String(student.pembimbing2 || "").trim()
-);
-
-
-
-if(d1){
-
-
-$("psppemEditPembimbing1Search")
-.value =
-d1.nama;
-
-
-$("psppemEditPembimbing1")
-.value =
-d1.sourceRow;
-
-
-$("psppemEditNip1")
-.value =
-d1.nip;
-
-
-}
-else{
-
-
-$("psppemEditPembimbing1Search")
-.value =
-student.pembimbing1 || "";
-
-
-$("psppemEditNip1")
-.value =
-student.nip1 || "";
-
-
-}
-
-
-
-if(d2){
-
-
-$("psppemEditPembimbing2Search")
-.value =
-d2.nama;
-
-
-$("psppemEditPembimbing2")
-.value =
-d2.sourceRow;
-
-
-$("psppemEditNip2")
-.value =
-d2.nip;
-
-
-}
-else{
-
-
-$("psppemEditPembimbing2Search")
-.value =
-student.pembimbing2 || "";
-
-
-$("psppemEditNip2")
-.value =
-student.nip2 || "";
-
-
-}
-
-
-}
-
-   
-/* =========================================================
-   RESET TAMPILAN
-   ========================================================= */
-
-window.psppemResetDisplay =
-function(){
-
-
-    const search =
-    $("psppemSearch");
-
-
-    const angkatan =
-    $("psppemAngkatan");
-
-
-    if(search){
-
-        search.value = "";
-
-    }
-
-
-    if(angkatan){
-
-        angkatan.value = "";
-
-    }
-
-
-
-    const resultArea =
-    $("psppemResultArea");
-
-
-    if(resultArea){
-
-        resultArea.style.display =
-        "none";
-
-    }
-
-
-
-    const container =
-    $("psppemData");
-
-
-    if(container){
-
-        container.innerHTML = "";
-
-    }
-
-
-
-    if($("psppemTotal")){
-
-        $("psppemTotal")
-        .textContent = "0";
-
-    }
-
-
-
-    setStatus(
-        "",
-        "info"
-    );
-
-
-};
 
 /* =========================================================
    EDIT PEMBIMBING
    ========================================================= */
 
 
-let CURRENT_PEMBIMBING_ROW = null;
+let CURRENT_PEMBIMBING_ROW =
+null;
 
 
 
@@ -2690,19 +2488,21 @@ student.nim;
 
 await loadDosen();
 
-fillEditPembimbingDosen();
+
 
 fillPembimbingForm(student);
 
-/* reset password dan pesan lama */
+
 
 const password =
 $("psppemPembimbingPassword");
 
 
+
 if(password){
 
-    password.value = "";
+password.value =
+"";
 
 }
 
@@ -2712,16 +2512,23 @@ const message =
 $("psppemPembimbingMessage");
 
 
+
 if(message){
 
-    message.style.display = "none";
+message.style.display =
+"none";
 
-    message.textContent = "";
 
-    message.className =
-    "psppem-modal-message";
+message.textContent =
+"";
+
+
+message.className =
+"psppem-modal-message";
 
 }
+
+
 
 $("psppemPembimbingModal")
 .classList.add(
@@ -2729,12 +2536,88 @@ $("psppemPembimbingModal")
 );
 
 
+
 };
 
-/* =========================================================
-   CLOSE EDIT PEMBIMBING MODAL
-   ========================================================= */
 
+
+function fillPembimbingForm(student){
+
+
+const d1 =
+STATE.dosen.find(
+d =>
+String(d.nama || "").trim()
+===
+String(student.pembimbing1 || "").trim()
+);
+
+
+
+const d2 =
+STATE.dosen.find(
+d =>
+String(d.nama || "").trim()
+===
+String(student.pembimbing2 || "").trim()
+);
+
+
+
+if(d1){
+
+
+$("psppemEditPembimbing1Search")
+.value =
+d1.nama;
+
+
+
+$("psppemEditPembimbing1")
+.value =
+d1.sourceRow;
+
+
+
+$("psppemEditNip1")
+.value =
+d1.nip;
+
+
+}
+
+
+
+if(d2){
+
+
+$("psppemEditPembimbing2Search")
+.value =
+d2.nama;
+
+
+
+$("psppemEditPembimbing2")
+.value =
+d2.sourceRow;
+
+
+
+$("psppemEditNip2")
+.value =
+d2.nip;
+
+
+}
+
+
+}
+
+
+
+/* =========================================================
+   CLOSE EDIT PEMBIMBING
+   ========================================================= */
 
 window.psppemClosePembimbingModal =
 function(){
@@ -2744,11 +2627,12 @@ const modal =
 $("psppemPembimbingModal");
 
 
+
 if(modal){
 
-    modal.classList.remove(
-        "is-open"
-    );
+modal.classList.remove(
+"is-open"
+);
 
 }
 
@@ -2758,30 +2642,20 @@ const password =
 $("psppemPembimbingPassword");
 
 
+
 if(password){
 
-    password.value = "";
+password.value =
+"";
 
 }
 
-
-
-const message =
-$("psppemPembimbingMessage");
-
-
-if(message){
-
-    message.style.display = "none";
-
-    message.textContent = "";
-
-}
 
 
 };
 
-/* FUNGSI KLIK BACKDROP */
+
+
 window.psppemPembimbingBackdropClose =
 function(event){
 
@@ -2791,17 +2665,19 @@ event.target.id ===
 "psppemPembimbingModal"
 ){
 
-    psppemClosePembimbingModal();
+psppemClosePembimbingModal();
 
 }
 
 
 };
 
+
+
+
 /* =========================================================
    SUBMIT EDIT PEMBIMBING
    ========================================================= */
-
 
 window.psppemSubmitPembimbing =
 async function(event){
@@ -2809,12 +2685,17 @@ async function(event){
 
 event.preventDefault();
 
+
+
 const pembimbing1Row =
-$("psppemEditPembimbing1").value.trim();
+$("psppemEditPembimbing1")
+.value.trim();
+
 
 
 const pembimbing2Row =
-$("psppemEditPembimbing2").value.trim();
+$("psppemEditPembimbing2")
+.value.trim();
 
 
 
@@ -2844,74 +2725,12 @@ dosen2 &&
 dosen1.sourceRow === dosen2.sourceRow
 ){
 
-const message =
-$("psppemPembimbingMessage");
-
-
-if(message){
-
-message.style.display =
-"block";
-
-message.className =
-"psppem-modal-message is-error";
-
-message.textContent =
-"Pembimbing I dan Pembimbing II tidak boleh sama.";
-
-}
-
-
 return;
 
 }
 
-const student =
-STATE.data.find(
-item =>
-String(item.sourceRow)
-===
-String(CURRENT_PEMBIMBING_ROW)
-);
 
 
-
-const konfirmasi = confirm(
-
-"Konfirmasi perubahan pembimbing:\n\n" +
-
-"Pembimbing I:\n" +
-
-(student?.pembimbing1 || "-") +
-
-"  →  " +
-
-(dosen1?.nama || "-") +
-
-"\n\n" +
-
-"Pembimbing II:\n" +
-
-(student?.pembimbing2 || "-") +
-
-"  →  " +
-
-(dosen2?.nama || "-") +
-
-"\n\n" +
-
-"Apakah Anda yakin ingin menyimpan perubahan?"
-
-);
-
-
-
-if(!konfirmasi){
-
-return;
-
-}
-   
 const payload = {
 
 
@@ -2940,31 +2759,15 @@ dosen2?.nip || "",
 
 
 password:
-$("psppemPembimbingPassword").value
+$("psppemPembimbingPassword")
+.value
 
 
 };
 
 
 
-const message =
-$("psppemPembimbingMessage");
-
-
-
 try{
-
-
-if(message){
-
-message.style.display =
-"block";
-
-message.textContent =
-"Menyimpan perubahan...";
-
-}
-
 
 
 const result =
@@ -2981,342 +2784,128 @@ result.result !==
 
 throw new Error(
 result.message ||
-"Gagal memperbarui data pembimbing."
+"Gagal memperbarui data."
 );
 
 }
 
 
 
-if(message){
-
-message.textContent =
-"Data pembimbing berhasil diperbarui.";
-
-}
+STATE.loaded =
+false;
 
 
 
-setTimeout(
-function(){
+await loadData();
+
+
+
+renderData();
+
+
 
 psppemClosePembimbingModal();
-
-STATE.loaded = false;
-psppemShowData();
-
-
-},
-800
-);
-
 
 
 }
 catch(error){
 
 
-if(message){
-
-message.style.display =
-"block";
-
-message.textContent =
-error.message;
-
-}
+setStatus(
+error.message,
+"error"
+);
 
 
 }
 
 
 };
+
+
+
+
 /* =========================================================
-   ISI DROPDOWN EDIT PEMBIMBING
+   RESET TAMPILAN
    ========================================================= */
 
-function fillEditPembimbingDosen(){
+window.psppemResetDisplay =
+function(){
 
 
-    const select1 =
-    $("psppemEditPembimbing1");
+const search =
+$("psppemSearch");
 
 
-    const select2 =
-    $("psppemEditPembimbing2");
+const angkatan =
+$("psppemAngkatan");
 
 
-    if(
-        !select1 ||
-        !select2
-    ){
 
-        return;
+if(search){
 
-    }
-
-
-
-    let html = `
-
-    <option value="">
-        Pilih dosen
-    </option>
-
-    `;
-
-
-
-    STATE.dosen.forEach(
-        function(dosen){
-
-
-            html += `
-
-            <option
-            value="${esc(dosen.nama)}"
-            data-nip="${esc(dosen.nip)}">
-
-            ${esc(dosen.nama)}
-
-            </option>
-
-            `;
-
-
-        }
-
-    );
-
-
-
-    select1.innerHTML =
-    html;
-
-
-    select2.innerHTML =
-    html;
-
-
-}
-
-/* FUNGSI PERUBAHAN DOSEN */
-window.psppemEditDosenChanged =
-function(no){
-
-
-const select =
-$("psppemEditPembimbing" + no);
-
-
-const nip =
-$("psppemEditNip" + no);
-
-
-
-if(
-!select ||
-!nip
-){
-
-return;
-
-}
-
-
-
-const option =
-select.options[
-select.selectedIndex
-];
-
-
-
-nip.value =
-option?.dataset?.nip || "";
-
-
-};
-
-/* =========================================================
-   AUTOCOMPLETE DOSEN ENGINE
-========================================================= */
-
-
-function psppemSearchDosen(keyword){
-
-
-    keyword =
-    String(keyword || "")
-    .toLowerCase()
-    .trim();
-
-
-
-    if(!keyword){
-
-        return [];
-
-    }
-
-
-
-    return STATE.dosen
-
-    .filter(function(dosen){
-
-
-        const target =
-        [
-
-            dosen.nama,
-
-            dosen.nip
-
-        ]
-
-        .join(" ")
-
-        .toLowerCase();
-
-
-
-        return target.includes(
-            keyword
-        );
-
-
-    })
-
-    .slice(0,10);
-
-
-
-}
-
-
-
-window.psppemRenderDosenSearch =
-function(
-resultId,
-inputId,
-hiddenId,
-nipId,
-keyword
-){
-
-console.log(
-"SEARCH DOSEN:",
-keyword
-);
-   
-    const container =
-    $(resultId);
-
-
-
-    if(!container)
-    return;
-
-
-
-    const result =
-    psppemSearchDosen(
-        keyword
-    );
-
-
-
-    if(!result.length){
-
-
-        container.innerHTML =
-        "";
-
-
-        return;
-
-
-    }
-
-
-
-    container.innerHTML =
-
-
-    result.map(function(dosen){
-
-
-        return `
-
-        <div 
-        class="psppem-dosen-result-item"
-        onclick="psppemSelectDosen(
-        '${resultId}',
-        '${inputId}',
-        '${hiddenId}',
-        '${nipId}',
-        '${dosen.sourceRow}',
-        '${esc(dosen.nama)}',
-        '${esc(dosen.nip)}'
-        )">
-
-
-            <strong>
-            ${esc(dosen.nama)}
-            </strong>
-
-
-            <small>
-            ${esc(dosen.nip)}
-            </small>
-
-
-        </div>
-
-        `;
-
-
-    }).join("");
-
-
-
-}
-
-
-
-window.psppemSelectDosen =
-function(
-resultId,
-inputId,
-hiddenId,
-nipId,
-sourceRow,
-nama,
-nip
-){
-
-
-
-$(inputId).value =
-nama;
-
-
-
-$(hiddenId).value =
-sourceRow;
-
-
-
-$(nipId).value =
-nip;
-
-
-
-$(resultId).innerHTML =
+search.value =
 "";
 
+}
+
+
+
+if(angkatan){
+
+angkatan.value =
+"";
+
+}
+
+
+
+const area =
+$("psppemResultArea");
+
+
+
+if(area){
+
+area.style.display =
+"none";
+
+}
+
+
+
+const container =
+$("psppemData");
+
+
+
+if(container){
+
+container.innerHTML =
+"";
+
+}
+
+
+
+if($("psppemTotal")){
+
+$("psppemTotal")
+.textContent =
+"0";
+
+}
+
+
+
+setStatus(
+"",
+"info"
+);
+
 
 };
-   
+
+
+
 })();
