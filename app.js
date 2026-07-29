@@ -1554,88 +1554,134 @@ function formatTanggalUjian(value){
 function renderExamInfo(student){
 
 
-    if(!student.pembimbing3){
-
-        return `
-
-        <div class="psppem-exam-box empty">
-
-            <strong>
-            Jadwal Ujian
-            </strong>
+if(!student.pembimbing3){
 
 
-            <p>
-            Belum ada jadwal ujian.
-            </p>
+return `
 
-        </div>
-
-        `;
-
-    }
+<div class="psppem-exam-box empty">
 
 
+<div>
 
-    return `
-
-    <div class="psppem-exam-box">
-
-
-        <span class="psppem-advisor-label">
-        Penguji
-        </span>
+<span class="psppem-advisor-label">
+JADWAL UJIAN
+</span>
 
 
-        <div class="psppem-advisor-name">
-
-        ${esc(student.pembimbing3)}
-
-        </div>
+<p>
+Belum ada jadwal ujian.
+</p>
 
 
-        <div class="psppem-advisor-nip">
-
-        ${esc(student.nip3)}
-
-        </div>
+</div>
 
 
-        <hr>
+${addExamButton(student)}
 
 
-        <div class="psppem-exam-detail">
+</div>
 
-            <strong>
-            Jadwal Ujian
-            </strong>
+`;
 
-
-            <p>
-            ${esc(student.hari)},
-            ${formatTanggalUjian(student.tanggal)}
-            </p>
+}
 
 
-            <p>
-            Jam:
-            ${esc(student.jam)}
-            </p>
+
+return `
+
+<div class="psppem-exam-box">
 
 
-            <p>
-            Ruangan:
-            ${esc(student.ruangan)}
-            </p>
+<span class="psppem-advisor-label">
+PENGUJI
+</span>
 
 
-        </div>
+<div class="psppem-advisor-name">
+
+${esc(student.pembimbing3)}
+
+</div>
 
 
-    </div>
+<div class="psppem-advisor-nip">
 
-    `;
+NIP ${esc(student.nip3)}
 
+</div>
+
+
+
+<hr>
+
+
+
+<span class="psppem-advisor-label">
+JADWAL UJIAN
+</span>
+
+
+
+<div class="psppem-exam-schedule">
+
+
+<div>
+
+<strong>
+Hari & Tanggal
+</strong>
+
+
+<p>
+${esc(student.hari)},
+${formatTanggalUjian(student.tanggal)}
+</p>
+
+</div>
+
+
+
+<div>
+
+<strong>
+Jam
+</strong>
+
+
+<p>
+${esc(student.jam)}
+</p>
+
+</div>
+
+
+
+<div>
+
+<strong>
+Ruangan
+</strong>
+
+
+<p>
+${esc(student.ruangan)}
+</p>
+
+</div>
+
+
+</div>
+
+
+
+${addExamButton(student)}
+
+
+
+</div>
+
+`;
 
 }
 
@@ -1667,6 +1713,7 @@ function addExamButton(student){
 
 return `
 
+<div class="psppem-exam-action">
 
 <button
 type="button"
@@ -1686,11 +1733,12 @@ d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm
 </span>
 
 
-${examButtonLabel(student)}
+${student.pembimbing3 ? "Edit Ujian" : "Jadwal Ujian"}
 
 
 </button>
 
+</div>
 
 `;
 
