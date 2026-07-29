@@ -2010,25 +2010,61 @@ option
 
 function fillExistingExam(student){
 
+function fillExistingExam(student){
+
     if(!student)
     return;
 
-
-    $("psppemUjianHari").value =
-    student.hari || "";
 
 
     $("psppemUjianTanggal").value =
     student.tanggal || "";
 
 
+
     $("psppemUjianJam").value =
     student.jam || "";
+
 
 
     $("psppemUjianRuangan").value =
     student.ruangan || "";
 
+
+
+    // Hitung ulang hari berdasarkan tanggal
+
+    if(student.tanggal){
+
+        const date =
+        new Date(student.tanggal);
+
+
+
+        const hari = [
+
+            "Minggu",
+            "Senin",
+            "Selasa",
+            "Rabu",
+            "Kamis",
+            "Jumat",
+            "Sabtu"
+
+        ];
+
+
+
+        $("psppemUjianHari").value =
+        hari[date.getDay()];
+
+    }
+    else{
+
+        $("psppemUjianHari").value =
+        "";
+
+    }
 
     if(student.pembimbing3){
 
@@ -2141,38 +2177,32 @@ $("psppemUjianTanggal")
 function(){
 
 
-if(!this.value)
-return;
+    if(!this.value)
+    return;
 
 
 
-const date =
-new Date(
-this.value
-);
+    const date =
+    new Date(this.value);
 
 
 
-const hari = [
+    const hari = [
 
-"Minggu",
-"Senin",
-"Selasa",
-"Rabu",
-"Kamis",
-"Jumat",
-"Sabtu"
+        "Minggu",
+        "Senin",
+        "Selasa",
+        "Rabu",
+        "Kamis",
+        "Jumat",
+        "Sabtu"
 
-];
+    ];
 
 
 
-$("psppemUjianHari")
-.value =
-hari[
-date.getDay()
-];
-
+    $("psppemUjianHari").value =
+    hari[date.getDay()];
 
 
 }
