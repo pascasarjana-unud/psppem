@@ -253,7 +253,15 @@ response.message ||
 
 STATE.dosen = response.data || [];
 
+console.log(
+"Jumlah dosen:",
+STATE.dosen.length
+);
 
+console.log(
+"Contoh dosen:",
+STATE.dosen[0]
+);
 
 return STATE.dosen;
 
