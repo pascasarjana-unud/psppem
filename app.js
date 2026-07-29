@@ -2480,65 +2480,95 @@ loading
 function fillPembimbingForm(student){
 
 
-const select1 =
-$("psppemEditPembimbing1");
-
-
-const select2 =
-$("psppemEditPembimbing2");
-
-
-
-if(select1){
-
-[...select1.options].forEach(option=>{
-
-
-if(
-option.value.trim()
+const d1 =
+STATE.dosen.find(
+d =>
+String(d.nama || "").trim()
 ===
 String(student.pembimbing1 || "").trim()
-){
-
-option.selected = true;
-
-}
-
-
-});
-
-}
+);
 
 
 
-if(select2){
-
-[...select2.options].forEach(option=>{
-
-
-if(
-option.value.trim()
+const d2 =
+STATE.dosen.find(
+d =>
+String(d.nama || "").trim()
 ===
 String(student.pembimbing2 || "").trim()
-){
+);
 
-option.selected = true;
+
+
+if(d1){
+
+
+$("psppemEditPembimbing1Search")
+.value =
+d1.nama;
+
+
+$("psppemEditPembimbing1")
+.value =
+d1.sourceRow;
+
+
+$("psppemEditNip1")
+.value =
+d1.nip;
+
 
 }
+else{
 
 
-});
+$("psppemEditPembimbing1Search")
+.value =
+student.pembimbing1 || "";
 
-}
 
-
-
-$("psppemEditNip1").value =
+$("psppemEditNip1")
+.value =
 student.nip1 || "";
 
 
-$("psppemEditNip2").value =
+}
+
+
+
+if(d2){
+
+
+$("psppemEditPembimbing2Search")
+.value =
+d2.nama;
+
+
+$("psppemEditPembimbing2")
+.value =
+d2.sourceRow;
+
+
+$("psppemEditNip2")
+.value =
+d2.nip;
+
+
+}
+else{
+
+
+$("psppemEditPembimbing2Search")
+.value =
+student.pembimbing2 || "";
+
+
+$("psppemEditNip2")
+.value =
 student.nip2 || "";
+
+
+}
 
 
 }
