@@ -2010,8 +2010,6 @@ option
 
 function fillExistingExam(student){
 
-function fillExistingExam(student){
-
     if(!student)
     return;
 
