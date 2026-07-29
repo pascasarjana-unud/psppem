@@ -1348,3 +1348,14 @@ width:100%;
 }
 
 }
+.psppem-form-field input[readonly]{
+
+    background:#f5f5f5;
+
+    color:#555555;
+
+    font-weight:700;
+
+    cursor:not-allowed;
+
+}
