@@ -2533,17 +2533,61 @@ loading
 function fillPembimbingForm(student){
 
 
-$("psppemEditPembimbing1").value =
-student.pembimbing1 || "";
+const select1 =
+$("psppemEditPembimbing1");
+
+
+const select2 =
+$("psppemEditPembimbing2");
+
+
+
+if(select1){
+
+[...select1.options].forEach(option=>{
+
+
+if(
+option.value.trim()
+===
+String(student.pembimbing1 || "").trim()
+){
+
+option.selected = true;
+
+}
+
+
+});
+
+}
+
+
+
+if(select2){
+
+[...select2.options].forEach(option=>{
+
+
+if(
+option.value.trim()
+===
+String(student.pembimbing2 || "").trim()
+){
+
+option.selected = true;
+
+}
+
+
+});
+
+}
+
 
 
 $("psppemEditNip1").value =
 student.nip1 || "";
-
-
-
-$("psppemEditPembimbing2").value =
-student.pembimbing2 || "";
 
 
 $("psppemEditNip2").value =
@@ -2942,5 +2986,43 @@ function fillEditPembimbingDosen(){
 
 
 }
+
+/* FUNGSI PERUBAHAN DOSEN */
+window.psppemEditDosenChanged =
+function(no){
+
+
+const select =
+$("psppemEditPembimbing" + no);
+
+
+const nip =
+$("psppemEditNip" + no);
+
+
+
+if(
+!select ||
+!nip
+){
+
+return;
+
+}
+
+
+
+const option =
+select.options[
+select.selectedIndex
+];
+
+
+
+nip.value =
+option?.dataset?.nip || "";
+
+
+};
    
 })();
