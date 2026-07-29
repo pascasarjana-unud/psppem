@@ -2721,7 +2721,34 @@ fillEditPembimbingDosen();
 
 fillPembimbingForm(student);
 
+/* reset password dan pesan lama */
 
+const password =
+$("psppemPembimbingPassword");
+
+
+if(password){
+
+    password.value = "";
+
+}
+
+
+
+const message =
+$("psppemPembimbingMessage");
+
+
+if(message){
+
+    message.style.display = "none";
+
+    message.textContent = "";
+
+    message.className =
+    "psppem-modal-message";
+
+}
 
 $("psppemPembimbingModal")
 .classList.add(
@@ -2749,6 +2776,32 @@ if(modal){
     modal.classList.remove(
         "is-open"
     );
+
+}
+
+
+
+const password =
+$("psppemPembimbingPassword");
+
+
+if(password){
+
+    password.value = "";
+
+}
+
+
+
+const message =
+$("psppemPembimbingMessage");
+
+
+if(message){
+
+    message.style.display = "none";
+
+    message.textContent = "";
 
 }
 
