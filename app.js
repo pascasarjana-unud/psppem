@@ -3145,7 +3145,8 @@ function psppemSearchDosen(keyword){
 
 
 
-function psppemRenderDosenSearch(
+window.psppemRenderDosenSearch =
+function(
 resultId,
 inputId,
 hiddenId,
