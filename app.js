@@ -1,124 +1,68 @@
 (function () {
-
 "use strict";
 
-
-/* =========================================================
+   /* =========================================================
    CONFIG
    ========================================================= */
 
-const URL =
-"https://script.google.com/macros/s/AKfycbwj-BbjdPy0HX_XIFajLCsvK2vYNJzu9Cu2AwOK5DjTfHYT0nwKYCNMlu9j7nEMJ8IQow/exec";
-
+const URL = "https://script.google.com/macros/s/AKfycbwj-BbjdPy0HX_XIFajLCsvK2vYNJzu9Cu2AwOK5DjTfHYT0nwKYCNMlu9j7nEMJ8IQow/exec";
 
 const STATE = {
-
   data: [],
-
   dosen: [],
-
   loaded: false,
-
   currentStudent: null
-
 };
 
+const $ = id => document.getElementById(id);
 
-const $ = id =>
-document.getElementById(id);
-
-
-
-/* =========================================================
+   /* =========================================================
    HELPER
    ========================================================= */
 
 function esc(value){
-
   return String(value ?? "")
   .replace(/[&<>"']/g, function(char){
-
     return {
-
       "&":"&amp;",
       "<":"&lt;",
       ">":"&gt;",
       '"':"&quot;",
       "'":"&#39;"
-
     }[char];
-
   });
-
 }
-
 
 function text(value){
-
   return String(value ?? "")
   .trim();
-
 }
-
-
 
 function setStatus(message,type="info"){
-
   const el =
   $("psppemStatus");
-
   if(!el) return;
-
-
-  el.style.display =
-  message ? "block" : "none";
-
-
-  el.className =
-  "psppem-status";
-
-
+  el.style.display = message ? "block" : "none";
+  el.className = "psppem-status";
   if(type==="success"){
-
-    el.classList.add(
-      "is-success"
-    );
-
+    el.classList.add("is-success");
   }
-
   else if(type==="error"){
-
-    el.classList.add(
-      "is-error"
-    );
-
+    el.classList.add("is-error");
   }
-
   else{
-
-    el.classList.add(
-      "is-info"
-    );
-
+    el.classList.add("is-info");
   }
-
-
-  el.textContent =
-  message || "";
-
+  el.textContent = message || "";
 }
 
-
-
-/* =========================================================
+   /* =========================================================
    JSONP GET
    ========================================================= */
 
 function jsonp(params){
-
 return new Promise(
 (resolve,reject)=>{
-
 
 const callback =
 "psppem_" +
@@ -3141,6 +3085,182 @@ select.selectedIndex
 
 nip.value =
 option?.dataset?.nip || "";
+
+
+};
+
+/* =========================================================
+   AUTOCOMPLETE DOSEN ENGINE
+========================================================= */
+
+
+function psppemSearchDosen(keyword){
+
+
+    keyword =
+    String(keyword || "")
+    .toLowerCase()
+    .trim();
+
+
+
+    if(!keyword){
+
+        return [];
+
+    }
+
+
+
+    return STATE.dosen
+
+    .filter(function(dosen){
+
+
+        const target =
+        [
+
+            dosen.nama,
+
+            dosen.nip
+
+        ]
+
+        .join(" ")
+
+        .toLowerCase();
+
+
+
+        return target.includes(
+            keyword
+        );
+
+
+    })
+
+    .slice(0,10);
+
+
+
+}
+
+
+
+function psppemRenderDosenSearch(
+resultId,
+inputId,
+hiddenId,
+nipId,
+keyword
+){
+
+
+    const container =
+    $(resultId);
+
+
+
+    if(!container)
+    return;
+
+
+
+    const result =
+    psppemSearchDosen(
+        keyword
+    );
+
+
+
+    if(!result.length){
+
+
+        container.innerHTML =
+        "";
+
+
+        return;
+
+
+    }
+
+
+
+    container.innerHTML =
+
+
+    result.map(function(dosen){
+
+
+        return `
+
+        <div 
+        class="psppem-dosen-result-item"
+        onclick="psppemSelectDosen(
+        '${resultId}',
+        '${inputId}',
+        '${hiddenId}',
+        '${nipId}',
+        '${dosen.sourceRow}',
+        '${esc(dosen.nama)}',
+        '${esc(dosen.nip)}'
+        )">
+
+
+            <strong>
+            ${esc(dosen.nama)}
+            </strong>
+
+
+            <small>
+            ${esc(dosen.nip)}
+            </small>
+
+
+        </div>
+
+        `;
+
+
+    }).join("");
+
+
+
+}
+
+
+
+window.psppemSelectDosen =
+function(
+resultId,
+inputId,
+hiddenId,
+nipId,
+sourceRow,
+nama,
+nip
+){
+
+
+
+$(inputId).value =
+nama;
+
+
+
+$(hiddenId).value =
+sourceRow;
+
+
+
+$(nipId).value =
+nip;
+
+
+
+$(resultId).innerHTML =
+"";
 
 
 };
