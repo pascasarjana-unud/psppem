@@ -280,6 +280,7 @@ const values =
 STATE.data
 .map(item =>
 text(item.angkatan)
+.toUpperCase()
 )
 .filter(Boolean)
 )
@@ -617,20 +618,9 @@ async function(){
 
 
 try{
-
-
-if(!STATE.loaded){
-
 await loadData();
-
-}
-
-
-
+   }
 renderData();
-
-
-
 }
 catch(error){
 
