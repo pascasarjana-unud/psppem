@@ -2813,19 +2813,39 @@ async function(event){
 
 event.preventDefault();
 
-const pembimbing1 =
+const pembimbing1Row =
 $("psppemEditPembimbing1").value.trim();
 
 
-const pembimbing2 =
+const pembimbing2Row =
 $("psppemEditPembimbing2").value.trim();
 
 
 
+const dosen1 =
+STATE.dosen.find(
+d =>
+String(d.sourceRow)
+===
+String(pembimbing1Row)
+);
+
+
+
+const dosen2 =
+STATE.dosen.find(
+d =>
+String(d.sourceRow)
+===
+String(pembimbing2Row)
+);
+
+
+
 if(
-pembimbing1 &&
-pembimbing2 &&
-pembimbing1 === pembimbing2
+dosen1 &&
+dosen2 &&
+dosen1.sourceRow === dosen2.sourceRow
 ){
 
 const message =
@@ -2870,7 +2890,7 @@ const konfirmasi = confirm(
 
 "  →  " +
 
-(pembimbing1 || "-") +
+(dosen1?.nama || "-") +
 
 "\n\n" +
 
@@ -2880,7 +2900,7 @@ const konfirmasi = confirm(
 
 "  →  " +
 
-(pembimbing2 || "-") +
+(dosen2?.nama || "-") +
 
 "\n\n" +
 
@@ -2908,19 +2928,19 @@ CURRENT_PEMBIMBING_ROW,
 
 
 pembimbing1:
-$("psppemEditPembimbing1").value,
+dosen1?.nama || "",
 
 
 nip1:
-$("psppemEditNip1").value,
+dosen1?.nip || "",
 
 
 pembimbing2:
-$("psppemEditPembimbing2").value,
+dosen2?.nama || "",
 
 
 nip2:
-$("psppemEditNip2").value,
+dosen2?.nip || "",
 
 
 password:
