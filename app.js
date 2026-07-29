@@ -2726,5 +2726,193 @@ $("psppemPembimbingModal")
 
 
 };
+
+/* =========================================================
+   CLOSE EDIT PEMBIMBING MODAL
+   ========================================================= */
+
+
+window.psppemClosePembimbingModal =
+function(){
+
+
+const modal =
+$("psppemPembimbingModal");
+
+
+if(modal){
+
+    modal.classList.remove(
+        "is-open"
+    );
+
+}
+
+
+};
+
+/* FUNGSI KLIK BACKDROP */
+window.psppemPembimbingBackdropClose =
+function(event){
+
+
+if(
+event.target.id ===
+"psppemPembimbingModal"
+){
+
+    psppemClosePembimbingModal();
+
+}
+
+
+};
+
+/* =========================================================
+   SUBMIT EDIT PEMBIMBING
+   ========================================================= */
+
+
+window.psppemSubmitPembimbing =
+async function(event){
+
+
+event.preventDefault();
+
+
+
+const payload = {
+
+
+action:
+"updatePembimbing",
+
+
+sourceRow:
+CURRENT_PEMBIMBING_ROW,
+
+
+pembimbing1:
+$("psppemEditPembimbing1").value,
+
+
+nip1:
+$("psppemEditNip1").value,
+
+
+pembimbing2:
+$("psppemEditPembimbing2").value,
+
+
+nip2:
+$("psppemEditNip2").value,
+
+
+password:
+$("psppemPembimbingPassword").value
+
+
+};
+
+
+
+const message =
+$("psppemPembimbingMessage");
+
+
+
+try{
+
+
+if(message){
+
+message.style.display =
+"block";
+
+message.textContent =
+"Menyimpan perubahan...";
+
+}
+
+
+
+const response =
+await fetch(
+WEB_APP_URL,
+{
+
+method:"POST",
+
+body:
+JSON.stringify(
+payload
+)
+
+}
+);
+
+
+
+const result =
+await response.json();
+
+
+
+if(
+result.result !==
+"success"
+){
+
+throw new Error(
+result.message
+);
+
+}
+
+
+
+if(message){
+
+message.textContent =
+"Data pembimbing berhasil diperbarui.";
+
+}
+
+
+
+setTimeout(
+function(){
+
+psppemClosePembimbingModal();
+
+STATE.loaded = false;
+psppemShowData();
+
+
+},
+800
+);
+
+
+
+}
+catch(error){
+
+
+if(message){
+
+message.style.display =
+"block";
+
+message.textContent =
+error.message;
+
+}
+
+
+}
+
+
+};
    
 })();
