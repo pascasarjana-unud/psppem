@@ -13,7 +13,8 @@ const STATE = {
     data: [],
     dosen: [],
     loaded: false,
-    currentStudent: null
+    currentStudent: null,
+    currentPrintStudent: null
 };
 
 
@@ -2907,7 +2908,7 @@ setStatus(
 };
 
 /* =========================================================
-   CETAK DOKUMEN
+   CETAK DOKUMEN MODAL
    ========================================================= */
 
 
@@ -2915,11 +2916,269 @@ window.psppemOpenPrintModal =
 function(){
 
 
-alert(
-"Modul Cetak Dokumen sedang disiapkan."
+const modal =
+$("psppemPrintModal");
+
+
+if(!modal)
+return;
+
+
+
+modal.classList.add(
+"is-open"
 );
+
+
+
+modal.setAttribute(
+"aria-hidden",
+"false"
+);
+
+
+
+document.documentElement
+.classList.add(
+"psppem-modal-open"
+);
+
+
+
+document.body
+.classList.add(
+"psppem-modal-open"
+);
+
+
+
+STATE.currentPrintStudent =
+null;
+
+
+
+$("psppemPrintSearch").value =
+"";
+
+
+$("psppemPrintResult").innerHTML =
+"";
+
+
+$("psppemPrintStudentInfo").innerHTML =
+
+`
+Belum ada mahasiswa dipilih.
+`;
 
 
 };
 
+/* FUNGSI TUTUP MODAL */
+window.psppemClosePrintModal =
+function(){
+
+
+const modal =
+$("psppemPrintModal");
+
+
+if(!modal)
+return;
+
+
+
+modal.classList.remove(
+"is-open"
+);
+
+
+
+modal.setAttribute(
+"aria-hidden",
+"true"
+);
+
+
+
+document.documentElement
+.classList.remove(
+"psppem-modal-open"
+);
+
+
+
+document.body
+.classList.remove(
+"psppem-modal-open"
+);
+
+
+
+};
+
+/* PENCARIAN MAHASISWA */
+window.psppemSearchPrintStudent =
+function(keyword){
+
+
+keyword =
+text(keyword)
+.toLowerCase();
+
+
+
+const container =
+$("psppemPrintResult");
+
+
+
+if(!container)
+return;
+
+
+
+if(!keyword){
+
+container.innerHTML =
+"";
+
+return;
+
+}
+
+
+
+const result =
+STATE.data.filter(
+student=>{
+
+
+const source =
+[
+student.nama,
+student.nim
+
+]
+.join(" ")
+.toLowerCase();
+
+
+
+return source.includes(
+keyword
+);
+
+
+}
+
+)
+.slice(
+0,
+10
+);
+
+
+
+container.innerHTML =
+
+result.map(
+student=>`
+
+<div
+class="psppem-print-result-item"
+onclick="psppemSelectPrintStudent('${student.sourceRow}')">
+
+
+<strong>
+${esc(student.nama)}
+</strong>
+
+
+<br>
+
+<small>
+NIM:
+${esc(student.nim)}
+|
+Angkatan:
+${esc(student.angkatan)}
+</small>
+
+
+</div>
+
+`
+)
+.join("");
+
+
+
+};
+
+/* PILIH MAHASISWA */
+window.psppemSelectPrintStudent =
+function(sourceRow){
+
+
+const student =
+STATE.data.find(
+item =>
+String(item.sourceRow)
+===
+String(sourceRow)
+);
+
+
+
+if(!student)
+return;
+
+
+
+STATE.currentPrintStudent =
+student;
+
+
+
+$("psppemPrintSearch").value =
+student.nama;
+
+
+
+$("psppemPrintResult").innerHTML =
+"";
+
+
+
+$("psppemPrintStudentInfo").innerHTML =
+
+`
+
+<h3>
+${esc(student.nama)}
+</h3>
+
+
+<p>
+NIM:
+<strong>
+${esc(student.nim)}
+</strong>
+</p>
+
+
+<p>
+Angkatan:
+<strong>
+${esc(student.angkatan)}
+</strong>
+</p>
+
+`;
+
+
+
+};
+   
 })();
