@@ -307,8 +307,7 @@ response.message ||
 
 
 
-STATE.dosen =
-response.data || [];
+STATE.dosen = response.data || [];
 
 
 
@@ -2553,43 +2552,6 @@ student.nip2 || "";
 
 }
 
-/* AUTO NIP */
-window.psppemEditDosenChanged =
-function(no){
-
-
-const select =
-$("psppemEditPembimbing"+no);
-
-
-const nip =
-$("psppemEditNip"+no);
-
-
-
-const option =
-select.options[
-select.selectedIndex
-];
-
-
-
-if(option){
-
-nip.value =
-option.dataset.nip || "";
-
-}
-else{
-
-nip.value =
-"";
-
-}
-
-
-};
-
    
 /* =========================================================
    RESET TAMPILAN
@@ -2711,11 +2673,9 @@ student.nim;
 
 await loadDosen();
 
+fillEditPembimbingDosen();
 
-
-fillPembimbingForm(
-student
-);
+fillPembimbingForm(student);
 
 
 
@@ -2914,5 +2874,73 @@ error.message;
 
 
 };
+/* =========================================================
+   ISI DROPDOWN EDIT PEMBIMBING
+   ========================================================= */
+
+function fillEditPembimbingDosen(){
+
+
+    const select1 =
+    $("psppemEditPembimbing1");
+
+
+    const select2 =
+    $("psppemEditPembimbing2");
+
+
+    if(
+        !select1 ||
+        !select2
+    ){
+
+        return;
+
+    }
+
+
+
+    let html = `
+
+    <option value="">
+        Pilih dosen
+    </option>
+
+    `;
+
+
+
+    STATE.dosen.forEach(
+        function(dosen){
+
+
+            html += `
+
+            <option
+            value="${esc(dosen.nama)}"
+            data-nip="${esc(dosen.nip)}">
+
+            ${esc(dosen.nama)}
+
+            </option>
+
+            `;
+
+
+        }
+
+    );
+
+
+
+    select1.innerHTML =
+    html;
+
+
+    select2.innerHTML =
+    html;
+
+
+}
    
 })();
