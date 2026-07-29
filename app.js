@@ -2840,7 +2840,12 @@ message.textContent =
 
 
 
-const response = await postData(payload);
+const result =
+await postData(
+payload
+);
+
+
 
 if(
 result.result !==
@@ -2848,7 +2853,8 @@ result.result !==
 ){
 
 throw new Error(
-result.message
+result.message ||
+"Gagal memperbarui data pembimbing."
 );
 
 }
