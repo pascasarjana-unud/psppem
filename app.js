@@ -3153,7 +3153,11 @@ nipId,
 keyword
 ){
 
-
+console.log(
+"SEARCH DOSEN:",
+keyword
+);
+   
     const container =
     $(resultId);
 
