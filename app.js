@@ -2026,36 +2026,41 @@ function fillExistingExam(student){
 
     }
 
-    if(student.pembimbing3){
-
-        const select =
-        $("psppemUjianPenguji");
+if(student.pembimbing3){
 
 
-        const option =
-        [
-            ...select.options
-        ]
-        .find(
-            item =>
-            item.textContent.trim()
-            ===
-            student.pembimbing3
-        );
+const penguji =
+STATE.dosen.find(
+d =>
+String(d.nama || "").trim()
+===
+String(student.pembimbing3 || "").trim()
+);
 
 
-        if(option){
 
-            select.value =
-            option.value;
+if(penguji){
 
 
-            $("psppemUjianNip").value =
-            student.nip3 || "";
+$("psppemUjianPengujiSearch")
+.value =
+penguji.nama;
 
-        }
 
-    }
+$("psppemUjianPenguji")
+.value =
+penguji.sourceRow;
+
+
+$("psppemUjianNip")
+.value =
+penguji.nip;
+
+
+}
+
+
+}
 
 }
 
@@ -2068,8 +2073,17 @@ window.psppemUjianPengujiChanged =
 function(){
 
 
-const select =
-$("psppemUjianPenguji");
+const pengujiRow =
+$("psppemUjianPenguji").value;
+
+
+const pengujiDosen =
+STATE.dosen.find(
+d =>
+String(d.sourceRow)
+===
+String(pengujiRow)
+);
 
 
 
@@ -2080,14 +2094,6 @@ $("psppemUjianNip");
 
 const other =
 $("psppemUjianOtherFields");
-
-
-
-const option =
-select.options[
-select.selectedIndex
-];
-
 
 
 if(
@@ -2301,17 +2307,15 @@ payload.pengujiType =
 
 
 payload.pengujiRow =
-select.value;
+pengujiRow;
 
 
 payload.penguji =
-option?.dataset?.nama ||
-"";
+pengujiDosen?.nama || "";
 
 
 payload.nipPenguji =
-option?.dataset?.nip ||
-"";
+pengujiDosen?.nip || "";
 
 
 }
