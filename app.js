@@ -2783,8 +2783,89 @@ async function(event){
 
 event.preventDefault();
 
+const pembimbing1 =
+$("psppemEditPembimbing1").value.trim();
 
 
+const pembimbing2 =
+$("psppemEditPembimbing2").value.trim();
+
+
+
+if(
+pembimbing1 &&
+pembimbing2 &&
+pembimbing1 === pembimbing2
+){
+
+const message =
+$("psppemPembimbingMessage");
+
+
+if(message){
+
+message.style.display =
+"block";
+
+message.className =
+"psppem-modal-message is-error";
+
+message.textContent =
+"Pembimbing I dan Pembimbing II tidak boleh sama.";
+
+}
+
+
+return;
+
+}
+
+const student =
+STATE.data.find(
+item =>
+String(item.sourceRow)
+===
+String(CURRENT_PEMBIMBING_ROW)
+);
+
+
+
+const konfirmasi = confirm(
+
+"Konfirmasi perubahan pembimbing:\n\n" +
+
+"Pembimbing I:\n" +
+
+(student?.pembimbing1 || "-") +
+
+"  →  " +
+
+(pembimbing1 || "-") +
+
+"\n\n" +
+
+"Pembimbing II:\n" +
+
+(student?.pembimbing2 || "-") +
+
+"  →  " +
+
+(pembimbing2 || "-") +
+
+"\n\n" +
+
+"Apakah Anda yakin ingin menyimpan perubahan?"
+
+);
+
+
+
+if(!konfirmasi){
+
+return;
+
+}
+   
 const payload = {
 
 
