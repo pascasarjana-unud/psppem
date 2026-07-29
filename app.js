@@ -2840,27 +2840,7 @@ message.textContent =
 
 
 
-const response =
-await fetch(
-WEB_APP_URL,
-{
-
-method:"POST",
-
-body:
-JSON.stringify(
-payload
-)
-
-}
-);
-
-
-
-const result =
-await response.json();
-
-
+const response = await postData(payload);
 
 if(
 result.result !==
