@@ -1187,8 +1187,6 @@ async function(event){
 
 event.preventDefault();
 
-
-
 const p1 =
 $("psppemAddPembimbing1");
 
@@ -1199,15 +1197,22 @@ $("psppemAddPembimbing2");
 
 
 const d1 =
-p1.options[
-p1.selectedIndex
-];
+STATE.dosen.find(
+d =>
+String(d.sourceRow)
+===
+String(p1.value)
+);
+
 
 
 const d2 =
-p2.options[
-p2.selectedIndex
-];
+STATE.dosen.find(
+d =>
+String(d.sourceRow)
+===
+String(p2.value)
+);
 
 
 
@@ -1241,11 +1246,11 @@ p1.value,
 
 
 pembimbing1:
-d1?.dataset?.nama || "",
+d1?.nama || "",
 
 
 nip1:
-d1?.dataset?.nip || "",
+d1?.nip || "",
 
 
 pembimbing2Row:
@@ -1253,11 +1258,11 @@ p2.value,
 
 
 pembimbing2:
-d2?.dataset?.nama || "",
+d2?.nama || "",
 
 
 nip2:
-d2?.dataset?.nip || "",
+d2?.nip || "",
 
 
 password:
