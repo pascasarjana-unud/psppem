@@ -633,7 +633,16 @@ ${esc(student.nip2)}
 
 </div>
 
+
 ${renderExamInfo(student)}
+
+
+<div class="psppem-card-action">
+
+${addExamButton(student)}
+
+</div>
+
 
 </div>
 
@@ -1747,15 +1756,13 @@ ${student.nama}
 
 resetUjianForm();
 
-fillExistingExam(student);
-
-
 
 await loadDosen();
 
-
-
 fillUjianDosen();
+
+
+fillExistingExam(student);
 
 
 
@@ -2445,60 +2452,6 @@ loading
    ========================================================= */
 
 
-const oldRender =
-renderData;
-
-
-
-renderData =
-function(){
-
-
-oldRender();
-
-
-
-document
-.querySelectorAll(
-".psppem-student-card"
-)
-.forEach(
-(card,index)=>{
-
-
-const student =
-searchData()[index];
-
-
-
-if(!student)
-return;
-
-
-
-const head =
-card.querySelector(
-".psppem-student-head"
-);
-
-
-
-if(head &&
-!card.querySelector(
-".psppem-button-primary"
-)){
-
-head.insertAdjacentHTML(
-"beforeend",
-addExamButton(student)
-);
-
-}
-
-
-});
-
-};
-  
+ 
 
 })();
