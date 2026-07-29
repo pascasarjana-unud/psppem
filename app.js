@@ -3180,5 +3180,19 @@ ${esc(student.angkatan)}
 
 
 };
+/* FUNGSI BACKDROP CLOSE */
+window.psppemPrintBackdropClose =
+function(event){
+
+if(
+event.target.id ===
+"psppemPrintModal"
+){
+
+psppemClosePrintModal();
+
+}
+
+};
    
 })();
