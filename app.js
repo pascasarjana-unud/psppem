@@ -85,8 +85,6 @@ const PRINT_DOCUMENTS = [
     keterangan:"Berita acara pelaksanaan ujian.",
     templateId:"12xXimKqX665IVIUeG-WaDdexjXPNNad4",
     manualFields:[
-        "nomorSurat",
-        "tanggalSurat",
         "jumlahPengujiHadir",
         "nilaiAkhir",
         "nilaiHuruf"
