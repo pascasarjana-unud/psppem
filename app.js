@@ -14,7 +14,8 @@ const STATE = {
     dosen: [],
     loaded: false,
     currentStudent: null,
-    currentPrintStudent: null
+    currentPrintStudent: null,
+    currentPrintDocument:null
 };
 
 /* =========================================================
@@ -28,6 +29,7 @@ const PRINT_DOCUMENTS = [
     id:"surat_pembimbing",
     nama:"Surat Permohonan Pembimbing",
     keterangan:"Surat permohonan penetapan pembimbing RPL.",
+    templateId:"12xXimKqX665IVIUeG-WaDdexjXPNNad4",
     manualFields:[
         "nomorSurat",
         "tanggalSurat"
@@ -39,6 +41,7 @@ const PRINT_DOCUMENTS = [
     id:"surat_penguji",
     nama:"Surat Permohonan Penguji RPL",
     keterangan:"Surat permohonan penetapan penguji RPL.",
+    templateId:"1NtoTUOUzJ3A8BYwYHqyeKlpoBdgCucWjUAxzFEQcvvo",
     manualFields:[
         "nomorSurat",
         "tanggalSurat"
@@ -50,6 +53,7 @@ const PRINT_DOCUMENTS = [
     id:"surat_undangan",
     nama:"Surat Undangan Menguji",
     keterangan:"Undangan dosen untuk pelaksanaan ujian.",
+    templateId:"1lFYJG6QVXk_IHMIvayEmHX_xIvekCHNHmwlPG26xNlM",
     manualFields:[
         "nomorSurat",
         "tanggalSurat"
@@ -61,6 +65,7 @@ const PRINT_DOCUMENTS = [
     id:"form_nilai_up",
     nama:"Form Nilai UP Studi Kasus",
     keterangan:"Form penilaian ujian proposal studi kasus.",
+    templateId:"1Y1Jo9t3yAyyZldRwzfTMyvkXXKOifCbTKvh0fOonJas",
     manualFields:[]
 },
 
@@ -69,6 +74,7 @@ const PRINT_DOCUMENTS = [
     id:"form_nilai_studi",
     nama:"Form Nilai Studi Kasus",
     keterangan:"Form penilaian ujian studi kasus.",
+    templateId:"1Wiq5T0Jbqxl22dDI8RpdVSwV7v3xM_InEgo1wt-oWSc",
     manualFields:[]
 },
 
@@ -77,6 +83,7 @@ const PRINT_DOCUMENTS = [
     id:"berita_acara",
     nama:"Berita Acara",
     keterangan:"Berita acara pelaksanaan ujian.",
+    templateId:"12xXimKqX665IVIUeG-WaDdexjXPNNad4",
     manualFields:[
         "nomorSurat",
         "tanggalSurat",
@@ -3327,7 +3334,7 @@ Cetak
 
 }
    /* FUNGSI SEMENTARA TOMBOL */
-   window.psppemPreparePrint =
+window.psppemPreparePrint =
 function(docId){
 
 
@@ -3344,12 +3351,173 @@ return;
 
 
 
-alert(
-"Persiapan cetak: " +
-doc.nama
+STATE.currentPrintDocument =
+doc;
+
+
+
+$("psppemDocumentTitle")
+.textContent =
+doc.nama;
+
+
+
+$("psppemDocumentDescription")
+.textContent =
+doc.keterangan;
+
+
+
+renderDocumentFields(doc);
+
+
+
+const modal =
+$("psppemDocumentFormModal");
+
+
+if(modal){
+
+modal.classList.add(
+"is-open"
+);
+
+
+modal.setAttribute(
+"aria-hidden",
+"false"
+);
+
+}
+
+
+
+};
+
+   /* FUNGSI RENDER FIELD OTOMATIS */
+   function renderDocumentFields(doc){
+
+
+const container =
+$("psppemDocumentFields");
+
+
+if(!container)
+return;
+
+
+
+if(
+!doc.manualFields ||
+!doc.manualFields.length
+){
+
+
+container.innerHTML =
+
+`
+<div class="psppem-selected-student">
+
+Dokumen siap dicetak.
+
+</div>
+`;
+
+return;
+
+}
+
+
+
+container.innerHTML =
+
+doc.manualFields.map(
+field=>{
+
+
+let label =
+field;
+
+
+if(field==="nomorSurat")
+label="Nomor Surat";
+
+
+if(field==="tanggalSurat")
+label="Tanggal Surat";
+
+
+if(field==="jumlahPengujiHadir")
+label="Jumlah Penguji Hadir";
+
+
+if(field==="nilaiAkhir")
+label="Nilai Akhir";
+
+
+if(field==="nilaiHuruf")
+label="Nilai Huruf";
+
+
+
+return `
+
+<div class="psppem-form-field">
+
+
+<label>
+
+${label}
+
+</label>
+
+
+<input
+type="text"
+data-document-field="${field}"
+class="psppem-input"
+>
+
+
+</div>
+
+`;
+
+}
+
+).join("");
+
+
+
+}
+
+   /* FUNGSI TUTUP MODAL */
+   window.psppemCloseDocumentFormModal =
+function(){
+
+
+const modal =
+$("psppemDocumentFormModal");
+
+
+if(!modal)
+return;
+
+
+
+modal.classList.remove(
+"is-open"
+);
+
+
+
+modal.setAttribute(
+"aria-hidden",
+"true"
 );
 
 
 };
+   
    
 })();
