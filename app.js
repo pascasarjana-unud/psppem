@@ -3359,7 +3359,10 @@ STATE.currentPrintDocument =
 doc;
 
 STATE.currentDocumentHistory =
-psppemCheckDocumentHistory();
+await psppemLoadDocumentHistory(
+student.sourceRow,
+doc.id
+);
    
 STATE.currentPrintStudent =
 student;
@@ -3402,6 +3405,102 @@ modal.setAttribute(
 
 };
 
+/* =========================================================
+   LOAD RIWAYAT CETAK DOKUMEN
+   ========================================================= */
+
+
+async function psppemLoadDocumentHistory(
+sourceRow,
+dokumenId
+){
+
+
+try{
+
+
+const result =
+await postData({
+
+action:
+"getDocumentHistory",
+
+sourceRow:
+sourceRow,
+
+dokumenId:
+dokumenId
+
+});
+
+
+
+if(
+result &&
+result.result === "success"
+){
+
+return {
+
+found:
+result.found,
+
+nomorSurat:
+result.data?.nomorSurat || "",
+
+tanggalSurat:
+result.data?.tanggalSurat || "",
+
+dataTambahan:
+result.data?.dataTambahan || ""
+
+};
+
+}
+
+
+return {
+
+found:false,
+
+nomorSurat:"",
+
+tanggalSurat:"",
+
+dataTambahan:""
+
+};
+
+
+}
+catch(error){
+
+
+console.error(
+"Load history error",
+error
+);
+
+
+
+return {
+
+found:false,
+
+nomorSurat:"",
+
+tanggalSurat:"",
+
+dataTambahan:""
+
+};
+
+
+}
+
+
+}
+   
    /* FUNGSI RENDER FIELD OTOMATIS */
    function renderDocumentFields(doc){
 
