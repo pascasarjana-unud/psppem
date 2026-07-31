@@ -18,8 +18,6 @@ const STATE = {
     currentPrintDocument:null,
     currentDocumentHistory:null
 };
-
-window.DEBUG_STATE = STATE;
    
 /* =========================================================
    MASTER DOKUMEN CETAK
@@ -3417,7 +3415,47 @@ STATE.currentDocumentHistory;
 if(!container)
 return;
 
+if(
+history &&
+history.found
+){
 
+container.innerHTML =
+
+`
+
+<div class="psppem-selected-student">
+
+<strong>
+Data sebelumnya ditemukan
+</strong>
+
+
+<p>
+Nomor Surat:
+<br>
+
+${esc(history.nomorSurat || "-")}
+
+</p>
+
+
+<p>
+Tanggal Surat:
+<br>
+
+${esc(history.tanggalSurat || "-")}
+
+</p>
+
+
+</div>
+
+`;
+
+return;
+
+}
 
 if(
 !doc.manualFields ||
