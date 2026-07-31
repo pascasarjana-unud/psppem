@@ -2915,7 +2915,9 @@ setStatus(
 window.psppemOpenPrintModal =
 function(){
 
-
+STATE.currentPrintStudent =
+null;
+   
 const modal =
 $("psppemPrintModal");
 
@@ -3194,5 +3196,176 @@ psppemClosePrintModal();
 }
 
 };
-   
+
+/* =========================================================
+   CETAK DOKUMEN
+   ========================================================= */
+
+
+window.psppemSearchPrintStudent =
+function(keyword){
+
+
+const container =
+$("psppemPrintResult");
+
+
+if(!container)
+return;
+
+
+
+keyword =
+text(keyword)
+.toLowerCase();
+
+
+
+if(!keyword){
+
+container.innerHTML =
+"";
+
+return;
+
+}
+
+
+
+const result =
+STATE.data
+.filter(student=>{
+
+
+const target =
+[
+student.nama,
+student.nim
+]
+.join(" ")
+.toLowerCase();
+
+
+
+return target.includes(
+keyword
+);
+
+
+})
+.slice(0,10);
+
+
+
+container.innerHTML =
+
+
+result.map(student=>`
+
+<div
+class="psppem-print-result-item"
+onclick="psppemSelectPrintStudent('${student.sourceRow}')">
+
+
+<strong>
+${esc(student.nama)}
+</strong>
+
+
+<small>
+
+NIM:
+${esc(student.nim)}
+<br>
+
+Angkatan:
+${esc(student.angkatan)}
+
+</small>
+
+
+</div>
+
+
+`).join("");
+
+
+
+};
+
+/* FUNGSI PILIH MAHASISWA */
+window.psppemSelectPrintStudent =
+function(sourceRow){
+
+
+const student =
+STATE.data.find(
+item =>
+String(item.sourceRow)
+===
+String(sourceRow)
+);
+
+
+
+if(!student)
+return;
+
+
+
+STATE.currentPrintStudent =
+student;
+
+
+
+$("psppemPrintSearch")
+.value =
+student.nama;
+
+
+
+$("psppemPrintResult")
+.innerHTML =
+"";
+
+
+
+$("psppemPrintStudentInfo")
+.innerHTML =
+
+
+`
+
+<h3>
+${esc(student.nama)}
+</h3>
+
+
+<p>
+
+NIM:
+<strong>
+${esc(student.nim)}
+
+</strong>
+
+</p>
+
+
+<p>
+
+Angkatan:
+<strong>
+${esc(student.angkatan)}
+
+</strong>
+
+</p>
+
+
+`;
+
+
+
+};
 })();
