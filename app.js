@@ -2915,9 +2915,7 @@ setStatus(
 window.psppemOpenPrintModal =
 function(){
 
-STATE.currentPrintStudent =
-null;
-   
+
 const modal =
 $("psppemPrintModal");
 
@@ -2951,6 +2949,13 @@ document.body
 .classList.add(
 "psppem-modal-open"
 );
+
+
+
+STATE.currentPrintStudent =
+null;
+
+
 
 $("psppemPrintSearch").value =
 "";
@@ -3189,6 +3194,5 @@ psppemClosePrintModal();
 }
 
 };
-
-
+   
 })();
