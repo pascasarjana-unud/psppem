@@ -3628,6 +3628,17 @@ ${label}
 type="text"
 data-document-field="${field}"
 class="psppem-input"
+value="${
+field === "nomorSurat"
+?
+(history?.nomorSurat || "")
+:
+field === "tanggalSurat"
+?
+(history?.tanggalSurat || "")
+:
+""
+}"
 >
 
 
@@ -3656,23 +3667,33 @@ const doc =
 STATE.currentPrintDocument;
 
 
-if(!doc)
+const history =
+STATE.currentDocumentHistory;
+
+
+
+if(!doc || !history)
 return;
+
+
+
+STATE.documentEditMode =
+true;
 
 
 
 STATE.currentDocumentHistory =
 {
-found:false,
+    found:true,
 
-nomorSurat:
-STATE.currentDocumentHistory?.nomorSurat || "",
+    nomorSurat:
+    history.nomorSurat || "",
 
-tanggalSurat:
-STATE.currentDocumentHistory?.tanggalSurat || "",
+    tanggalSurat:
+    history.tanggalSurat || "",
 
-dataTambahan:
-STATE.currentDocumentHistory?.dataTambahan || ""
+    dataTambahan:
+    history.dataTambahan || ""
 
 };
 
@@ -3680,14 +3701,18 @@ STATE.currentDocumentHistory?.dataTambahan || ""
 
 renderDocumentFields({
 
-...doc,
+    ...doc,
 
-manualFields:[
-"nomorSurat",
-"tanggalSurat"
-]
+    manualFields:[
+        "nomorSurat",
+        "tanggalSurat"
+    ]
 
 });
+
+
+
+renderDocumentActions();
 
 
 };
