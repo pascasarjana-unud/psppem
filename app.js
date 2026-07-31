@@ -16,7 +16,8 @@ const STATE = {
     currentStudent: null,
     currentPrintStudent: null,
     currentPrintDocument:null,
-    currentDocumentHistory:null
+    currentDocumentHistory:null,
+    documentEditMode:false
 };
    
 /* =========================================================
@@ -3381,6 +3382,8 @@ doc.keterangan;
 
 renderDocumentFields(doc);
 
+renderDocumentActions();
+
 
 
 const modal =
@@ -3926,5 +3929,94 @@ alert(
 
 
 };
+
+/* =========================================================
+   RENDER AKSI DOKUMEN
+   ========================================================= */
+
+
+function renderDocumentActions(){
+
+
+const container =
+$("psppemDocumentActions");
+
+
+if(!container)
+return;
+
+
+
+const history =
+STATE.currentDocumentHistory;
+
+
+
+if(
+history &&
+history.found
+){
+
+container.innerHTML =
+
+`
+
+<button
+type="button"
+class="psppem-button psppem-button-secondary"
+onclick="psppemEditDocumentHistory()">
+
+Edit
+
+</button>
+
+
+<button
+type="button"
+class="psppem-button psppem-button-primary"
+onclick="psppemGeneratePDF()">
+
+Cetak PDF
+
+</button>
+
+`;
+
+
+
+return;
+
+}
+
+
+
+container.innerHTML =
+
+`
+
+<button
+type="button"
+class="psppem-button psppem-button-primary"
+onclick="psppemSaveDocumentHistory()">
+
+Simpan
+
+</button>
+
+
+<button
+type="button"
+class="psppem-button psppem-button-primary"
+onclick="psppemGeneratePDF()">
+
+Cetak PDF
+
+</button>
+
+`;
+
+
+
+}
    
 })();
