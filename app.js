@@ -17,7 +17,77 @@ const STATE = {
     currentPrintStudent: null
 };
 
+/* =========================================================
+   MASTER DOKUMEN CETAK
+   Tambahkan dokumen baru di sini
+   ========================================================= */
 
+const PRINT_DOCUMENTS = [
+
+{
+    id:"surat_pembimbing",
+    nama:"Surat Permohonan Pembimbing",
+    keterangan:"Surat permohonan penetapan pembimbing RPL.",
+    manualFields:[
+        "nomorSurat",
+        "tanggalSurat"
+    ]
+},
+
+
+{
+    id:"surat_penguji",
+    nama:"Surat Permohonan Penguji RPL",
+    keterangan:"Surat permohonan penetapan penguji RPL.",
+    manualFields:[
+        "nomorSurat",
+        "tanggalSurat"
+    ]
+},
+
+
+{
+    id:"surat_undangan",
+    nama:"Surat Undangan Menguji",
+    keterangan:"Undangan dosen untuk pelaksanaan ujian.",
+    manualFields:[
+        "nomorSurat",
+        "tanggalSurat"
+    ]
+},
+
+
+{
+    id:"form_nilai_up",
+    nama:"Form Nilai UP Studi Kasus",
+    keterangan:"Form penilaian ujian proposal studi kasus.",
+    manualFields:[]
+},
+
+
+{
+    id:"form_nilai_studi",
+    nama:"Form Nilai Studi Kasus",
+    keterangan:"Form penilaian ujian studi kasus.",
+    manualFields:[]
+},
+
+
+{
+    id:"berita_acara",
+    nama:"Berita Acara",
+    keterangan:"Berita acara pelaksanaan ujian.",
+    manualFields:[
+        "nomorSurat",
+        "tanggalSurat",
+        "jumlahPengujiHadir",
+        "nilaiAkhir",
+        "nilaiHuruf"
+    ]
+}
+
+];
+   
 const $ = id =>
 document.getElementById(id);
 
@@ -3184,7 +3254,7 @@ ${esc(student.angkatan)}
 
 `;
 
-
+renderPrintDocuments();
 
 };
 /* FUNGSI BACKDROP CLOSE */
@@ -3199,6 +3269,86 @@ event.target.id ===
 psppemClosePrintModal();
 
 }
+
+};
+
+   /* FUNGSI RENDER TOMBOL */
+   function renderPrintDocuments(){
+
+
+const container =
+$("psppemPrintDocuments");
+
+
+if(!container)
+return;
+
+
+
+container.innerHTML =
+
+PRINT_DOCUMENTS.map(doc=>`
+
+
+<div class="psppem-print-card">
+
+
+<div>
+
+<strong>
+${doc.nama}
+</strong>
+
+
+<small>
+${doc.keterangan}
+</small>
+
+
+</div>
+
+
+
+<button
+type="button"
+class="psppem-button psppem-button-primary"
+onclick="psppemPreparePrint('${doc.id}')">
+
+Cetak
+
+</button>
+
+
+</div>
+
+
+`).join("");
+
+
+}
+   /* FUNGSI SEMENTARA TOMBOL */
+   window.psppemPreparePrint =
+function(docId){
+
+
+const doc =
+PRINT_DOCUMENTS.find(
+item =>
+item.id === docId
+);
+
+
+
+if(!doc)
+return;
+
+
+
+alert(
+"Persiapan cetak: " +
+doc.nama
+);
+
 
 };
    
