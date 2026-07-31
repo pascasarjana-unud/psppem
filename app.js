@@ -15,7 +15,8 @@ const STATE = {
     loaded: false,
     currentStudent: null,
     currentPrintStudent: null,
-    currentPrintDocument:null
+    currentPrintDocument:null,
+    currentDocumentHistory:null
 };
 
 /* =========================================================
@@ -3333,7 +3334,7 @@ Cetak
 }
    /* FUNGSI SEMENTARA TOMBOL */
 window.psppemPreparePrint =
-function(docId){
+async function(docId){
 
 
 const doc =
@@ -3347,12 +3348,18 @@ item.id === docId
 if(!doc)
 return;
 
+const student =
+STATE.currentPrintStudent;
 
+
+if(!student)
+return;
 
 STATE.currentPrintDocument =
 doc;
 
-
+STATE.currentPrintStudent =
+student;
 
 $("psppemDocumentTitle")
 .textContent =
