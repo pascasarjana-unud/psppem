@@ -3551,16 +3551,6 @@ ${esc(history.tanggalSurat || "-")}
 </p>
 
 
-<button
-type="button"
-class="psppem-button psppem-button-secondary"
-onclick="psppemEditDocumentHistory()">
-
-Edit Data
-
-</button>
-
-
 </div>
 
 `;
@@ -3933,8 +3923,6 @@ alert(
 /* =========================================================
    RENDER AKSI DOKUMEN
    ========================================================= */
-
-
 function renderDocumentActions(){
 
 
@@ -3946,9 +3934,43 @@ if(!container)
 return;
 
 
-
 const history =
 STATE.currentDocumentHistory;
+
+
+if(
+STATE.documentEditMode
+){
+
+container.innerHTML =
+
+`
+
+<button
+type="button"
+class="psppem-button psppem-button-primary"
+onclick="psppemSaveDocumentHistory()">
+
+Simpan
+
+</button>
+
+
+<button
+type="button"
+class="psppem-button psppem-button-secondary"
+onclick="psppemCancelDocumentEdit()">
+
+Batal
+
+</button>
+
+
+`;
+
+return;
+
+}
 
 
 
@@ -3980,9 +4002,8 @@ Cetak PDF
 
 </button>
 
+
 `;
-
-
 
 return;
 
@@ -4014,8 +4035,6 @@ Cetak PDF
 </button>
 
 `;
-
-
 
 }
    
