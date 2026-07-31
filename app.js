@@ -2913,7 +2913,14 @@ setStatus(
 
 
 window.psppemOpenPrintModal =
-function(){
+async function(){
+
+
+if(!STATE.data.length){
+
+await loadData();
+
+}
 
 
 const modal =
