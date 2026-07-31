@@ -19,6 +19,8 @@ const STATE = {
     currentDocumentHistory:null
 };
 
+window.DEBUG_STATE = STATE;
+   
 /* =========================================================
    MASTER DOKUMEN CETAK
    Tambahkan dokumen baru di sini
