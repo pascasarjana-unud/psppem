@@ -1565,7 +1565,62 @@ background:#f5f7fa;
 
 }
 
+/* =========================================================
+   PRINT DOCUMENT LIST
+   ========================================================= */
 
+
+.psppem-print-documents{
+
+    margin-top:20px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+
+
+.psppem-print-card{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:16px;
+
+    border:1px solid rgba(0,0,0,.08);
+
+    border-radius:16px;
+
+    background:#fff;
+
+}
+
+
+
+.psppem-print-card strong{
+
+    display:block;
+
+    margin-bottom:5px;
+
+}
+
+
+
+.psppem-print-card small{
+
+    color:#777;
+
+}
 
 #psppemPrintStudentInfo p{
 
