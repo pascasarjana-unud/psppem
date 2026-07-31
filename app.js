@@ -3668,12 +3668,32 @@ return;
 
 
 
+STATE.currentDocumentHistory =
+{
+found:false,
+
+nomorSurat:
+STATE.currentDocumentHistory?.nomorSurat || "",
+
+tanggalSurat:
+STATE.currentDocumentHistory?.tanggalSurat || "",
+
+dataTambahan:
+STATE.currentDocumentHistory?.dataTambahan || ""
+
+};
+
+
+
 renderDocumentFields({
+
 ...doc,
+
 manualFields:[
 "nomorSurat",
 "tanggalSurat"
 ]
+
 });
 
 
