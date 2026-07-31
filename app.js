@@ -3617,16 +3617,147 @@ return {
 key:
 historyKey,
 
-found:true,
+found:false,
 
-nomorSurat:"001/RPL/2026",
-tanggalSurat:"31 Juli 2026",
+nomorSurat:"",
+tanggalSurat:"",
 
 dataTambahan:""
 
 };
+}
+
+/* =========================================================
+   KUMPULKAN DATA DOKUMEN
+   ========================================================= */
+
+
+function collectDocumentData(){
+
+
+const fields =
+document.querySelectorAll(
+"[data-document-field]"
+);
+
+
+
+const data = {};
+
+
+
+fields.forEach(
+field=>{
+
+
+data[
+field.dataset.documentField
+]
+=
+field.value.trim();
+
 
 
 }
+);
+
+
+
+return data;
+
+
+}
+
+/* =========================================================
+   SIMPAN RIWAYAT CETAK
+   ========================================================= */
+
+
+async function saveDocumentHistory(){
+
+
+const student =
+STATE.currentPrintStudent;
+
+
+const doc =
+STATE.currentPrintDocument;
+
+
+
+if(
+!student ||
+!doc
+){
+
+return;
+
+}
+
+
+
+const data =
+collectDocumentData();
+
+
+
+const payload = {
+
+
+action:
+"saveDocumentHistory",
+
+
+sourceRow:
+student.sourceRow,
+
+
+dokumenId:
+doc.id,
+
+
+namaDokumen:
+doc.nama,
+
+
+nomorSurat:
+data.nomorSurat || "",
+
+
+tanggalSurat:
+data.tanggalSurat || "",
+
+
+dataTambahan:
+JSON.stringify(data)
+
+
+};
+
+
+
+console.log(
+"SAVE DOCUMENT HISTORY",
+payload
+);
+
+
+
+}
+   
+/* TOMBOL CETAK PDF */
+window.psppemGeneratePDF =
+async function(){
+
+
+await saveDocumentHistory();
+
+
+alert(
+"Riwayat dokumen tersimpan."
+);
+
+
+};
    
 })();
