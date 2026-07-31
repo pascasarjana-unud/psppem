@@ -3359,6 +3359,8 @@ return;
 STATE.currentPrintDocument =
 doc;
 
+STATE.documentEditMode = false;
+   
 STATE.currentDocumentHistory =
 await psppemLoadDocumentHistory(
 student.sourceRow,
@@ -3959,9 +3961,15 @@ if(!container)
 return;
 
 
+
 const history =
 STATE.currentDocumentHistory;
 
+
+
+/*
+ MODE EDIT
+ */
 
 if(
 STATE.documentEditMode
@@ -3990,7 +3998,6 @@ Batal
 
 </button>
 
-
 `;
 
 return;
@@ -3998,6 +4005,10 @@ return;
 }
 
 
+
+/*
+ DATA SUDAH ADA
+ */
 
 if(
 history &&
@@ -4027,7 +4038,6 @@ Cetak PDF
 
 </button>
 
-
 `;
 
 return;
@@ -4035,6 +4045,10 @@ return;
 }
 
 
+
+/*
+ DATA BARU
+ */
 
 container.innerHTML =
 
