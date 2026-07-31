@@ -3548,6 +3548,16 @@ ${esc(history.tanggalSurat || "-")}
 </p>
 
 
+<button
+type="button"
+class="psppem-button psppem-button-secondary"
+onclick="psppemEditDocumentHistory()">
+
+Edit Data
+
+</button>
+
+
 </div>
 
 `;
@@ -3640,6 +3650,35 @@ class="psppem-input"
 
 }
 
+/* =========================================================
+   EDIT DATA RIWAYAT DOKUMEN
+   ========================================================= */
+
+
+window.psppemEditDocumentHistory =
+function(){
+
+
+const doc =
+STATE.currentPrintDocument;
+
+
+if(!doc)
+return;
+
+
+
+renderDocumentFields({
+...doc,
+manualFields:[
+"nomorSurat",
+"tanggalSurat"
+]
+});
+
+
+};
+   
    /* FUNGSI TUTUP MODAL */
    window.psppemCloseDocumentFormModal =
 function(){
