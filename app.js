@@ -3617,11 +3617,10 @@ return {
 key:
 historyKey,
 
-found:false,
+found:true,
 
-nomorSurat:"",
-
-tanggalSurat:"",
+nomorSurat:"001/RPL/2026",
+tanggalSurat:"31 Juli 2026",
 
 dataTambahan:""
 
