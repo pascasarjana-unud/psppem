@@ -3358,6 +3358,9 @@ return;
 STATE.currentPrintDocument =
 doc;
 
+STATE.currentDocumentHistory =
+psppemCheckDocumentHistory();
+   
 STATE.currentPrintStudent =
 student;
 
@@ -3406,7 +3409,9 @@ modal.setAttribute(
 const container =
 $("psppemDocumentFields");
 
-
+const history =
+STATE.currentDocumentHistory;
+      
 if(!container)
 return;
 
@@ -3524,5 +3529,65 @@ modal.setAttribute(
 
 };
    
+/* =========================================================
+   CEK RIWAYAT CETAK DOKUMEN
+   ========================================================= */
+
+
+function psppemCheckDocumentHistory(){
+
+const student =
+STATE.currentPrintStudent;
+
+
+const doc =
+STATE.currentPrintDocument;
+
+
+
+if(
+!student ||
+!doc
+){
+
+return null;
+
+}
+
+
+
+const historyKey =
+
+String(student.sourceRow)
++
+"_"
++
+String(doc.id);
+
+
+
+/*
+ sementara dummy
+ nanti diganti ambil dari Sheet RiwayatCetak
+*/
+
+
+return {
+
+key:
+historyKey,
+
+found:false,
+
+nomorSurat:"",
+
+tanggalSurat:"",
+
+dataTambahan:""
+
+};
+
+
+}
    
 })();
