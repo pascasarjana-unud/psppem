@@ -3919,21 +3919,143 @@ window.psppemSaveDocumentHistory = async function () {
    Generator PDF akan ditambahkan pada tahap berikutnya
    ========================================================= */
 
-window.psppemGeneratePDF = async function () {
-    try {
-        await saveDocumentHistory();
+window.psppemGeneratePDF =
+async function(){
 
-        alert(
-            "Data dokumen berhasil disimpan. Generator PDF belum dipasang."
-        );
-    } catch (error) {
-        console.error(
-            "Gagal menyiapkan dokumen:",
-            error
-        );
+const student =
+STATE.currentPrintStudent;
 
-        alert(error.message);
-    }
+const doc =
+STATE.currentPrintDocument;
+
+
+if(
+!student ||
+!doc
+){
+
+alert(
+"Mahasiswa atau dokumen belum dipilih."
+);
+
+return;
+
+}
+
+
+const pdfWindow =
+window.open(
+"",
+"_blank"
+);
+
+
+if(pdfWindow){
+
+pdfWindow.document.write(
+"<p style='font-family:Arial,sans-serif;padding:24px'>Membuat PDF...</p>"
+);
+
+}
+
+
+try{
+
+
+await saveDocumentHistory();
+
+
+const result =
+await postData({
+
+action:
+"generatePDF",
+
+sourceRow:
+student.sourceRow,
+
+dokumenId:
+doc.id
+
+});
+
+
+if(
+!result ||
+result.result !== "success"
+){
+
+throw new Error(
+result?.message ||
+"Gagal membuat PDF."
+);
+
+}
+
+
+if(!result.pdfUrl){
+
+throw new Error(
+"URL PDF tidak diterima dari server."
+);
+
+}
+
+
+STATE.documentEditMode =
+false;
+
+
+renderDocumentFields(
+doc
+);
+
+
+renderDocumentActions();
+
+
+if(pdfWindow){
+
+pdfWindow.location.replace(
+result.pdfUrl
+);
+
+}
+else{
+
+window.open(
+result.pdfUrl,
+"_blank",
+"noopener"
+);
+
+}
+
+
+}
+catch(error){
+
+
+if(pdfWindow){
+
+pdfWindow.close();
+
+}
+
+
+console.error(
+"Generate PDF gagal:",
+error
+);
+
+
+alert(
+error.message
+);
+
+
+}
+
 };
 
 /* =========================================================
