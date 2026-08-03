@@ -4002,18 +4002,6 @@ throw new Error(
 }
 
 
-STATE.documentEditMode =
-false;
-
-
-renderDocumentFields(
-doc
-);
-
-
-renderDocumentActions();
-
-
 if(pdfWindow){
 
 pdfWindow.location.replace(
