@@ -85,7 +85,7 @@ const PRINT_DOCUMENTS = [
     id:"berita_acara",
     nama:"Berita Acara",
     keterangan:"Berita acara pelaksanaan ujian.",
-    templateId:"12xXimKqX665IVIUeG-WaDdexjXPNNad4",
+    templateId:"12xXimKqX665IVIUeG-WaDdexjXPNNad4uaOMClGvKRE",
     manualFields:[
         "jumlahPengujiHadir",
         "nilaiAkhir",
@@ -3843,46 +3843,178 @@ return data;
    ========================================================= */
 
 async function saveDocumentHistory() {
-    const student = STATE.currentPrintStudent;
-    const doc = STATE.currentPrintDocument;
 
-    if (!student) {
-        throw new Error("Mahasiswa belum dipilih.");
+    const student =
+    STATE.currentPrintStudent;
+
+    const doc =
+    STATE.currentPrintDocument;
+
+    const history =
+    STATE.currentDocumentHistory;
+
+
+    if(!student){
+
+        throw new Error(
+            "Mahasiswa belum dipilih."
+        );
+
     }
 
-    if (!doc) {
-        throw new Error("Dokumen belum dipilih.");
+
+    if(!doc){
+
+        throw new Error(
+            "Dokumen belum dipilih."
+        );
+
     }
 
-    const data = collectDocumentData();
 
-    const payload = {
-        action: "saveDocumentHistory",
-        sourceRow: student.sourceRow,
-        dokumenId: doc.id,
-        namaDokumen: doc.nama,
-        nomorSurat: data.nomorSurat || "",
-        tanggalSurat: data.tanggalSurat || "",
-        dataTambahan: JSON.stringify(data)
+    /*
+    Ambil data tambahan lama dari riwayat.
+    */
+
+    let oldAdditionalData = {};
+
+
+    if(
+        history &&
+        history.dataTambahan
+    ){
+
+        try{
+
+            const parsed =
+            JSON.parse(
+                history.dataTambahan
+            );
+
+
+            if(
+                parsed &&
+                typeof parsed === "object" &&
+                !Array.isArray(parsed)
+            ){
+
+                oldAdditionalData =
+                parsed;
+
+            }
+
+        }
+        catch(error){
+
+            console.warn(
+                "dataTambahan lama tidak valid:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /*
+    Data lama menjadi dasar.
+    Data input baru hanya menimpa field
+    yang memang tersedia di form.
+    */
+
+    const oldData = {
+
+        ...oldAdditionalData,
+
+        nomorSurat:
+        history?.nomorSurat ||
+        oldAdditionalData.nomorSurat ||
+        "",
+
+        tanggalSurat:
+        history?.tanggalSurat ||
+        oldAdditionalData.tanggalSurat ||
+        ""
+
     };
 
-    const result = await postData(payload);
 
-    if (!result || result.result !== "success") {
+    const formData =
+    collectDocumentData();
+
+
+    const data = {
+
+        ...oldData,
+        ...formData
+
+    };
+
+
+    const payload = {
+
+        action:
+        "saveDocumentHistory",
+
+        sourceRow:
+        student.sourceRow,
+
+        dokumenId:
+        doc.id,
+
+        namaDokumen:
+        doc.nama,
+
+        nomorSurat:
+        data.nomorSurat || "",
+
+        tanggalSurat:
+        data.tanggalSurat || "",
+
+        dataTambahan:
+        JSON.stringify(data)
+
+    };
+
+
+    const result =
+    await postData(
+        payload
+    );
+
+
+    if(
+        !result ||
+        result.result !== "success"
+    ){
+
         throw new Error(
             result?.message ||
             "Gagal menyimpan data dokumen."
         );
+
     }
 
+
     STATE.currentDocumentHistory = {
-        found: true,
-        nomorSurat: data.nomorSurat || "",
-        tanggalSurat: data.tanggalSurat || "",
-        dataTambahan: JSON.stringify(data)
+
+        found:
+        true,
+
+        nomorSurat:
+        data.nomorSurat || "",
+
+        tanggalSurat:
+        data.tanggalSurat || "",
+
+        dataTambahan:
+        JSON.stringify(data)
+
     };
 
+
     return result;
+
 }
 
 
@@ -3962,7 +4094,33 @@ pdfWindow.document.write(
 try{
 
 
-await saveDocumentHistory();
+const hasDocumentFields =
+document.querySelector(
+    "[data-document-field]"
+) !== null;
+
+
+const historyExists =
+STATE.currentDocumentHistory &&
+STATE.currentDocumentHistory.found;
+
+
+/*
+Simpan hanya jika:
+1. Riwayat belum ada.
+2. Sedang dalam mode Edit.
+3. Input form sedang tampil.
+*/
+
+if(
+    !historyExists ||
+    STATE.documentEditMode ||
+    hasDocumentFields
+){
+
+    await saveDocumentHistory();
+
+}
 
 
 const result =
