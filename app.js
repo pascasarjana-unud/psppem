@@ -3702,16 +3702,7 @@ STATE.currentDocumentHistory =
 
 
 
-renderDocumentFields({
-
-    ...doc,
-
-    manualFields:[
-        "nomorSurat",
-        "tanggalSurat"
-    ]
-
-});
+renderDocumentFields(doc);
 
 
 
@@ -3851,101 +3842,98 @@ return data;
    SIMPAN RIWAYAT CETAK
    ========================================================= */
 
+async function saveDocumentHistory() {
+    const student = STATE.currentPrintStudent;
+    const doc = STATE.currentPrintDocument;
 
-async function saveDocumentHistory(){
+    if (!student) {
+        throw new Error("Mahasiswa belum dipilih.");
+    }
 
+    if (!doc) {
+        throw new Error("Dokumen belum dipilih.");
+    }
 
-const student =
-STATE.currentPrintStudent;
+    const data = collectDocumentData();
 
+    const payload = {
+        action: "saveDocumentHistory",
+        sourceRow: student.sourceRow,
+        dokumenId: doc.id,
+        namaDokumen: doc.nama,
+        nomorSurat: data.nomorSurat || "",
+        tanggalSurat: data.tanggalSurat || "",
+        dataTambahan: JSON.stringify(data)
+    };
 
-const doc =
-STATE.currentPrintDocument;
+    const result = await postData(payload);
 
+    if (!result || result.result !== "success") {
+        throw new Error(
+            result?.message ||
+            "Gagal menyimpan data dokumen."
+        );
+    }
 
+    STATE.currentDocumentHistory = {
+        found: true,
+        nomorSurat: data.nomorSurat || "",
+        tanggalSurat: data.tanggalSurat || "",
+        dataTambahan: JSON.stringify(data)
+    };
 
-if(
-!student ||
-!doc
-){
-
-return;
-
+    return result;
 }
 
 
+/* =========================================================
+   TOMBOL SIMPAN
+   ========================================================= */
 
-const data =
-collectDocumentData();
+window.psppemSaveDocumentHistory = async function () {
+    try {
+        await saveDocumentHistory();
 
+        STATE.documentEditMode = false;
 
+        renderDocumentFields(
+            STATE.currentPrintDocument
+        );
 
-const payload = {
+        renderDocumentActions();
 
+        alert("Data dokumen berhasil disimpan.");
+    } catch (error) {
+        console.error(
+            "Gagal menyimpan dokumen:",
+            error
+        );
 
-action:
-"saveDocumentHistory",
-
-
-sourceRow:
-student.sourceRow,
-
-
-dokumenId:
-doc.id,
-
-
-namaDokumen:
-doc.nama,
-
-
-nomorSurat:
-data.nomorSurat || "",
-
-
-tanggalSurat:
-data.tanggalSurat || "",
-
-
-dataTambahan:
-JSON.stringify(data)
-
-
+        alert(error.message);
+    }
 };
 
 
+/* =========================================================
+   TOMBOL CETAK PDF
+   Generator PDF akan ditambahkan pada tahap berikutnya
+   ========================================================= */
 
-console.log(
-"SAVE DOCUMENT HISTORY",
-payload
-);
+window.psppemGeneratePDF = async function () {
+    try {
+        await saveDocumentHistory();
 
-const result =
-await postData(
-payload
-);
+        alert(
+            "Data dokumen berhasil disimpan. Generator PDF belum dipasang."
+        );
+    } catch (error) {
+        console.error(
+            "Gagal menyiapkan dokumen:",
+            error
+        );
 
-
-console.log(
-"RESULT SAVE HISTORY",
-result
-);
-
-}
-   
-/* TOMBOL CETAK PDF */
-window.psppemGeneratePDF =
-async function(){
-
-
-await saveDocumentHistory();
-
-
-alert(
-"Riwayat dokumen tersimpan."
-);
-
-
+        alert(error.message);
+    }
 };
 
 /* =========================================================
@@ -4088,19 +4076,5 @@ STATE.currentPrintDocument
 renderDocumentActions();
 };
 
-/* TOMBOL SIMPAN */
-window.psppemSaveDocumentHistory =
-async function(){
-const student =
-STATE.currentPrintStudent;
-const doc =
-STATE.currentPrintDocument;
-const data =
-collectDocumentData();
-console.log(
-"SIMPAN DOKUMEN",
-data
-);
-};
-   
+  
 })();
