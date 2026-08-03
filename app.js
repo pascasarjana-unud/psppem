@@ -4560,7 +4560,7 @@ Cetak PDF
 </button>
 
 `;
-
+}
 /* TOMBOL BATAL */
 window.psppemCancelDocumentEdit =
 function(){
