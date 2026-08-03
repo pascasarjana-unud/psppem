@@ -31,7 +31,7 @@ const PRINT_DOCUMENTS = [
     id:"surat_pembimbing",
     nama:"Surat Permohonan Pembimbing",
     keterangan:"Surat permohonan penetapan pembimbing RPL.",
-    templateId:"12xXimKqX665IVIUeG-WaDdexjXPNNad4",
+    templateId:"1FLrL4ZxJSu06bGf5aj-AHmq6-dhyYjT1AGRE0yT4tbE",
     manualFields:[
         "nomorSurat",
         "tanggalSurat"
