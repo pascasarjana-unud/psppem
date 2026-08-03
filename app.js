@@ -4299,14 +4299,24 @@ Simpan hanya jika:
 3. Input form sedang tampil.
 */
 
+const hasManualFields =
+Array.isArray(
+doc.manualFields
+)
+&&
+doc.manualFields.length > 0;
+
+
 if(
-    !historyExists ||
-    STATE.documentEditMode ||
-    hasDocumentFields
+hasManualFields
+&&
+(
+!historyExists ||
+STATE.documentEditMode ||
+hasDocumentFields
+)
 ){
-
-    await saveDocumentHistory();
-
+await saveDocumentHistory();
 }
 
 
@@ -4488,7 +4498,39 @@ return;
 
 }
 
+/*
+ DOKUMEN TANPA INPUT MANUAL
+ */
 
+if(
+STATE.currentPrintDocument &&
+(
+STATE.currentPrintDocument.id ===
+"form_nilai_up"
+||
+STATE.currentPrintDocument.id ===
+"form_nilai_studi"
+)
+){
+
+container.innerHTML =
+
+`
+
+<button
+type="button"
+class="psppem-button psppem-button-primary"
+onclick="psppemGeneratePDF()">
+
+Cetak PDF
+
+</button>
+
+`;
+
+return;
+
+}
 
 /*
  DATA BARU BERITA ACARA
