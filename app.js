@@ -3507,23 +3507,182 @@ dataTambahan:""
 }
    
    /* FUNGSI RENDER FIELD OTOMATIS */
-   function renderDocumentFields(doc){
+function renderDocumentFields(doc){
 
 
 const container =
 $("psppemDocumentFields");
 
+
 const history =
 STATE.currentDocumentHistory;
-      
+
+
 if(!container)
 return;
+
+
+/*
+BACA DATA TAMBAHAN DARI RIWAYAT
+*/
+
+let additionalData = {};
+
+
+if(
+history &&
+history.dataTambahan
+){
+
+try{
+
+
+const parsed =
+JSON.parse(
+history.dataTambahan
+);
+
+
+if(
+parsed &&
+typeof parsed === "object" &&
+!Array.isArray(parsed)
+){
+
+additionalData =
+parsed;
+
+}
+
+
+}
+catch(error){
+
+
+console.warn(
+"dataTambahan tidak valid:",
+error
+);
+
+
+}
+
+
+}
+
+
+/*
+HELPER LABEL FIELD
+*/
+
+function getFieldLabel(field){
+
+
+const labels = {
+
+nomorSurat:
+"Nomor Surat",
+
+tanggalSurat:
+"Tanggal Surat",
+
+jumlahPengujiHadir:
+"Jumlah Penguji Hadir",
+
+nilaiAkhir:
+"Nilai Angka",
+
+nilaiHuruf:
+"Nilai Huruf"
+
+};
+
+
+return labels[field] || field;
+
+
+}
+
+
+/*
+HELPER NILAI FIELD
+*/
+
+function getFieldValue(field){
+
+
+if(
+field === "nomorSurat"
+){
+
+return (
+history?.nomorSurat ||
+additionalData.nomorSurat ||
+""
+);
+
+}
+
+
+if(
+field === "tanggalSurat"
+){
+
+return (
+history?.tanggalSurat ||
+additionalData.tanggalSurat ||
+""
+);
+
+}
+
+
+return (
+additionalData[field] ||
+""
+);
+
+
+}
+
+
+/*
+RIWAYAT SUDAH ADA
+TAMPILKAN RINGKASAN SESUAI JENIS DOKUMEN
+*/
 
 if(
 history &&
 history.found &&
 !STATE.documentEditMode
 ){
+
+
+const fields =
+doc.manualFields || [];
+
+
+if(!fields.length){
+
+
+container.innerHTML =
+
+`
+<div class="psppem-selected-student">
+
+<strong>
+Dokumen siap dicetak
+</strong>
+
+</div>
+`;
+
+
+return;
+
+
+}
+
 
 container.innerHTML =
 
@@ -3536,31 +3695,43 @@ Data sebelumnya ditemukan
 </strong>
 
 
+${
+fields.map(
+field=>`
+
 <p>
-Nomor Surat:
+
+${esc(
+getFieldLabel(field)
+)}:
+
 <br>
 
-${esc(history.nomorSurat || "-")}
+${esc(
+getFieldValue(field) || "-"
+)}
 
 </p>
 
-
-<p>
-Tanggal Surat:
-<br>
-
-${esc(history.tanggalSurat || "-")}
-
-</p>
+`
+).join("")
+}
 
 
 </div>
 
 `;
 
+
 return;
 
+
 }
+
+
+/*
+DOKUMEN TANPA INPUT MANUAL
+*/
 
 if(
 !doc.manualFields ||
@@ -3578,11 +3749,16 @@ Dokumen siap dicetak.
 </div>
 `;
 
+
 return;
+
 
 }
 
 
+/*
+FORM INPUT ATAU EDIT
+*/
 
 container.innerHTML =
 
@@ -3590,29 +3766,36 @@ doc.manualFields.map(
 field=>{
 
 
-let label =
-field;
+const label =
+getFieldLabel(field);
 
 
-if(field==="nomorSurat")
-label="Nomor Surat";
+const value =
+getFieldValue(field);
 
 
-if(field==="tanggalSurat")
-label="Tanggal Surat";
+let inputType =
+"text";
 
 
-if(field==="jumlahPengujiHadir")
-label="Jumlah Penguji Hadir";
+if(
+field === "jumlahPengujiHadir"
+){
+
+inputType =
+"number";
+
+}
 
 
-if(field==="nilaiAkhir")
-label="Nilai Akhir";
+if(
+field === "nilaiAkhir"
+){
 
+inputType =
+"number";
 
-if(field==="nilaiHuruf")
-label="Nilai Huruf";
-
+}
 
 
 return `
@@ -3622,26 +3805,30 @@ return `
 
 <label>
 
-${label}
+${esc(label)}
 
 </label>
 
 
 <input
-type="text"
-data-document-field="${field}"
+type="${inputType}"
+data-document-field="${esc(field)}"
 class="psppem-input"
-value="${
-field === "nomorSurat"
+value="${esc(value)}"
+${
+field === "jumlahPengujiHadir"
 ?
-(history?.nomorSurat || "")
-:
-field === "tanggalSurat"
-?
-(history?.tanggalSurat || "")
+'min="0" step="1"'
 :
 ""
-}"
+}
+${
+field === "nilaiAkhir"
+?
+'min="0" max="100" step="0.01"'
+:
+""
+}
 >
 
 
@@ -3649,10 +3836,10 @@ field === "tanggalSurat"
 
 `;
 
+
 }
 
 ).join("");
-
 
 
 }
@@ -4304,7 +4491,49 @@ return;
 
 
 /*
- DATA BARU
+ DATA BARU BERITA ACARA
+ HARUS DISIMPAN SEBELUM DICETAK
+ */
+
+if(
+STATE.currentPrintDocument?.id ===
+"berita_acara"
+){
+
+container.innerHTML =
+
+`
+
+<button
+type="button"
+class="psppem-button psppem-button-primary"
+onclick="psppemSaveDocumentHistory()">
+
+Simpan
+
+</button>
+
+
+<button
+type="button"
+class="psppem-button psppem-button-secondary"
+onclick="psppemCloseDocumentFormModal()">
+
+Batal
+
+</button>
+
+`;
+
+
+return;
+
+
+}
+
+
+/*
+ DATA BARU DOKUMEN LAIN
  */
 
 container.innerHTML =
@@ -4331,8 +4560,6 @@ Cetak PDF
 </button>
 
 `;
-
-}
 
 /* TOMBOL BATAL */
 window.psppemCancelDocumentEdit =
