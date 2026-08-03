@@ -3521,7 +3521,8 @@ return;
 
 if(
 history &&
-history.found
+history.found &&
+!STATE.documentEditMode
 ){
 
 container.innerHTML =
@@ -4076,5 +4077,30 @@ Cetak PDF
 `;
 
 }
+
+/* TOMBOL BATAL */
+window.psppemCancelDocumentEdit =
+function(){
+STATE.documentEditMode = false;
+renderDocumentFields(
+STATE.currentPrintDocument
+);
+renderDocumentActions();
+};
+
+/* TOMBOL SIMPAN */
+window.psppemSaveDocumentHistory =
+async function(){
+const student =
+STATE.currentPrintStudent;
+const doc =
+STATE.currentPrintDocument;
+const data =
+collectDocumentData();
+console.log(
+"SIMPAN DOKUMEN",
+data
+);
+};
    
 })();
